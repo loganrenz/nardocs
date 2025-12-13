@@ -52,32 +52,35 @@ export class NuxtPlugin implements Plugin {
     return [
       {
         name: 'check_nuxt_ui_component',
-        description: 'Check the latest API documentation for a Nuxt UI component. Use this BEFORE suggesting or modifying any Nuxt UI component code (UButton, UCard, UModal, etc.) to ensure you have the current v4 API. This will fetch the most up-to-date component documentation including props, slots, and usage examples.',
+        description:
+          'Check the latest API documentation for a Nuxt UI component. Use this BEFORE suggesting or modifying any Nuxt UI component code (UButton, UCard, UModal, etc.) to ensure you have the current v4 API. This will fetch the most up-to-date component documentation including props, slots, and usage examples.',
         inputSchema: {
           type: 'object',
           properties: {
             component: {
               type: 'string',
-              description: 'The component name (e.g., "button", "card", "modal")'
-            }
+              description: 'The component name (e.g., "button", "card", "modal")',
+            },
           },
-          required: ['component']
-        }
+          required: ['component'],
+        },
       },
       {
         name: 'check_nuxt_feature',
-        description: 'Fetch Nuxt framework documentation for a specific feature or API. Use this when working with Nuxt composables, server APIs, routing, configuration, or any core Nuxt functionality to ensure you have the latest documentation.',
+        description:
+          'Fetch Nuxt framework documentation for a specific feature or API. Use this when working with Nuxt composables, server APIs, routing, configuration, or any core Nuxt functionality to ensure you have the latest documentation.',
         inputSchema: {
           type: 'object',
           properties: {
             feature: {
               type: 'string',
-              description: 'The feature or API path (e.g., "getting-started/data-fetching", "api/composables/use-fetch", "guide/directory-structure/server")'
-            }
+              description:
+                'The feature or API path (e.g., "getting-started/data-fetching", "api/composables/use-fetch", "guide/directory-structure/server")',
+            },
           },
-          required: ['feature']
-        }
-      }
+          required: ['feature'],
+        },
+      },
     ];
   }
 
@@ -92,15 +95,16 @@ export class NuxtPlugin implements Plugin {
 
   getContext(dependencies: Record<string, string>): string {
     let context = '## Nuxt Framework\n\n';
-    
+
     if ('nuxt' in dependencies) {
       context += `- Nuxt version: ${dependencies.nuxt}\n`;
     }
-    
+
     if ('@nuxt/ui' in dependencies || 'nuxt-ui' in dependencies) {
       const version = dependencies['@nuxt/ui'] || dependencies['nuxt-ui'];
       context += `- Nuxt UI version: ${version}\n`;
-      context += '- **Important**: Nuxt UI v4 has breaking changes from v3. Always check component docs before use.\n';
+      context +=
+        '- **Important**: Nuxt UI v4 has breaking changes from v3. Always check component docs before use.\n';
     }
 
     context += '\n### Documentation Links\n';
@@ -112,17 +116,17 @@ export class NuxtPlugin implements Plugin {
 
   private async checkNuxtUiComponent(component: string): Promise<string> {
     const url = `https://ui.nuxt.com/components/${component.toLowerCase()}`;
-    
+
     try {
       const result = await this.parser.extractContent(url);
       let response = `# Nuxt UI Component: ${component}\n\n`;
       response += `Source: ${result.url}\n\n`;
       response += result.content;
-      
+
       if (result.truncated) {
         response += '\n\n[Content truncated - visit URL for full documentation]';
       }
-      
+
       return response;
     } catch (error) {
       if (error instanceof Error && error.message.includes('404')) {
@@ -134,17 +138,17 @@ export class NuxtPlugin implements Plugin {
 
   private async checkNuxtFeature(feature: string): Promise<string> {
     const url = `https://nuxt.com/docs/${feature}`;
-    
+
     try {
       const result = await this.parser.extractContent(url);
       let response = `# Nuxt Documentation: ${feature}\n\n`;
       response += `Source: ${result.url}\n\n`;
       response += result.content;
-      
+
       if (result.truncated) {
         response += '\n\n[Content truncated - visit URL for full documentation]';
       }
-      
+
       return response;
     } catch (error) {
       if (error instanceof Error && error.message.includes('404')) {

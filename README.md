@@ -70,6 +70,7 @@ Add to your Cursor settings (`.cursorrules` or MCP settings):
 ### Other MCP Clients
 
 Configure according to your client's documentation, ensuring:
+
 - Command: `npx -y mcp-project-docs` (or `mcp-project-docs` if installed globally)
 - Environment variable `PROJECT_PATH` points to your project directory
 
@@ -78,29 +79,131 @@ Configure according to your client's documentation, ensuring:
 ### Currently Supported
 
 #### Nuxt
+
 - ✅ Nuxt UI component documentation
 - ✅ Nuxt framework documentation
 - ✅ Automatic version detection
 - ✅ Breaking change warnings (e.g., v3 → v4)
 
 **Tools:**
+
 - `check_nuxt_ui_component`: Fetch component docs (e.g., UButton, UCard)
 - `check_nuxt_feature`: Fetch framework docs (e.g., composables, server APIs)
 
 #### Vue
+
 - ✅ Vue 3 API documentation
 - ✅ Composition API references
 - ✅ Component API documentation
 
 **Tools:**
+
 - `check_vue_api`: Fetch Vue API docs (e.g., ref, computed, watch)
 
-### Planned Support
+#### Next.js
 
-#### React/Next.js
-- ⏳ React hooks documentation
-- ⏳ Next.js App Router documentation
-- ⏳ React component APIs
+- ✅ Next.js App Router documentation
+- ✅ API reference for components and functions
+- ✅ Automatic App Router detection (v13+)
+
+**Tools:**
+
+- `check_nextjs_docs`: Fetch Next.js documentation
+- `check_nextjs_api`: Fetch Next.js API reference (next/image, next/link, etc.)
+
+#### Angular
+
+- ✅ Angular API documentation
+- ✅ Angular guide documentation
+- ✅ Angular Material detection
+
+**Tools:**
+
+- `check_angular_api`: Fetch Angular API docs (Component, Injectable, etc.)
+- `check_angular_guide`: Fetch Angular guides (routing, forms, etc.)
+
+#### Svelte/SvelteKit
+
+- ✅ Svelte API documentation
+- ✅ SvelteKit feature documentation
+
+**Tools:**
+
+- `check_svelte_api`: Fetch Svelte API docs
+- `check_sveltekit_feature`: Fetch SvelteKit docs (routing, load, etc.)
+
+#### Tailwind CSS
+
+- ✅ Tailwind CSS utility documentation
+- ✅ Plugin detection (@tailwindcss/forms, typography)
+
+**Tools:**
+
+- `check_tailwind_docs`: Fetch Tailwind CSS docs (flex, grid, colors, etc.)
+
+#### Express.js
+
+- ✅ Express API documentation
+- ✅ Express guide documentation
+
+**Tools:**
+
+- `check_express_api`: Fetch Express API docs (app, req, res, router)
+- `check_express_guide`: Fetch Express guides (routing, middleware, etc.)
+
+#### Prisma
+
+- ✅ Prisma concepts documentation
+- ✅ Prisma API reference
+
+**Tools:**
+
+- `check_prisma_docs`: Fetch Prisma docs (schema, client, migrate)
+- `check_prisma_reference`: Fetch Prisma API reference
+
+#### Vite
+
+- ✅ Vite configuration documentation
+- ✅ Plugin detection (React, Vue)
+
+**Tools:**
+
+- `check_vite_docs`: Fetch Vite docs (features, config, build)
+
+#### Astro
+
+- ✅ Astro documentation
+- ✅ Integration documentation
+- ✅ Integration detection (React, Vue, Svelte, Tailwind)
+
+**Tools:**
+
+- `check_astro_docs`: Fetch Astro docs (components, content collections)
+- `check_astro_integration`: Fetch Astro integration docs
+
+#### SolidJS
+
+- ✅ SolidJS documentation
+- ✅ Router and SolidStart detection
+
+**Tools:**
+
+- `check_solid_docs`: Fetch SolidJS docs (reactivity, signals)
+
+#### Remix
+
+- ✅ Remix documentation
+- ✅ Remix API reference
+
+**Tools:**
+
+- `check_remix_docs`: Fetch Remix docs (routing, loaders, actions)
+- `check_remix_api`: Fetch Remix API reference (useLoaderData, etc.)
+
+#### React (Basic)
+
+- ✅ React context and version detection
+- ⏳ React hooks documentation (planned)
 
 The plugin system is already in place - contributions welcome!
 
@@ -111,12 +214,14 @@ The plugin system is already in place - contributions welcome!
 Once configured, the AI assistant automatically has access to:
 
 #### Resources (Auto-loaded)
+
 - `project://dependencies` - Your complete dependency list with versions
 - `project://context` - Framework-specific notes and documentation links
 
 #### Tools (On-demand)
 
 **Example 1: Checking Nuxt UI Component**
+
 ```
 AI: I need to use a button component. Let me check the current Nuxt UI Button API...
 [AI calls: check_nuxt_ui_component({ component: "button" })]
@@ -125,6 +230,7 @@ AI: Based on the current v4 API, here's the correct usage...
 ```
 
 **Example 2: Checking Vue Composable**
+
 ```
 AI: Let me verify the ref() API before suggesting this code...
 [AI calls: check_vue_api({ api: "ref" })]
@@ -165,6 +271,7 @@ src/
 ### Plugin System
 
 Each plugin implements:
+
 - `detect(dependencies)`: Returns true if framework is present
 - `getTools()`: Returns MCP tool definitions
 - `handleToolCall(name, args)`: Handles tool execution
@@ -202,11 +309,11 @@ export class MyFrameworkPlugin implements Plugin {
         inputSchema: {
           type: 'object',
           properties: {
-            api: { type: 'string', description: 'API to check' }
+            api: { type: 'string', description: 'API to check' },
           },
-          required: ['api']
-        }
-      }
+          required: ['api'],
+        },
+      },
     ];
   }
 
@@ -238,7 +345,8 @@ ls $PROJECT_PATH/package.json
 
 **Problem**: AI doesn't see any documentation tools
 
-**Solution**: 
+**Solution**:
+
 1. Check that your project has supported frameworks installed
 2. Verify `package.json` includes dependencies like `nuxt`, `vue`, or `react`
 3. Restart your MCP client after configuration changes
@@ -248,6 +356,7 @@ ls $PROJECT_PATH/package.json
 **Problem**: Tool returns "Failed to fetch" error
 
 **Solution**:
+
 1. Check internet connection
 2. Verify the documentation URL is accessible
 3. Some corporate networks may block certain domains
@@ -261,10 +370,12 @@ ls $PROJECT_PATH/package.json
 ## Development
 
 ### Prerequisites
+
 - Node.js 18+
 - npm or yarn
 
 ### Setup
+
 ```bash
 # Install dependencies
 npm install
@@ -277,6 +388,7 @@ npm run dev
 ```
 
 ### Testing
+
 ```bash
 # Build the server
 npm run build
@@ -286,6 +398,7 @@ PROJECT_PATH=/path/to/test/project node build/index.js
 ```
 
 ### Project Structure
+
 - `src/`: TypeScript source code
 - `build/`: Compiled JavaScript output
 - `package.json`: Project configuration
@@ -304,6 +417,7 @@ MIT
 ## Contributing
 
 Contributions are welcome! Areas for improvement:
+
 - Add more framework plugins (Angular, Svelte, etc.)
 - Improve HTML parsing for specific documentation sites
 - Add caching for frequently accessed docs
@@ -313,6 +427,7 @@ Contributions are welcome! Areas for improvement:
 ## Credits
 
 Built with:
+
 - [@modelcontextprotocol/sdk](https://github.com/modelcontextprotocol/sdk) - MCP protocol implementation
 - [cheerio](https://github.com/cheeriojs/cheerio) - HTML parsing
 - [node-fetch](https://github.com/node-fetch/node-fetch) - HTTP requests

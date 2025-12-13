@@ -1,0 +1,18 @@
+# Ignore dev/test files for npm package
+src/
+tests/
+*.test.ts
+.github/
+.husky/
+.eslintrc*
+eslint.config.js
+.prettierrc
+.prettierignore
+vitest.config.ts
+tsconfig.json
+.gitignore
+coverage/
+*.log
+.DS_Store
+.env*
+Readme

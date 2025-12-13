@@ -15,18 +15,20 @@ export class VuePlugin implements Plugin {
     return [
       {
         name: 'check_vue_api',
-        description: 'Fetch Vue 3 API documentation for a specific API, composable, or feature. Use this when working with Vue composition API (ref, computed, watch), component APIs, directives, or any Vue core functionality to ensure you have the latest documentation.',
+        description:
+          'Fetch Vue 3 API documentation for a specific API, composable, or feature. Use this when working with Vue composition API (ref, computed, watch), component APIs, directives, or any Vue core functionality to ensure you have the latest documentation.',
         inputSchema: {
           type: 'object',
           properties: {
             api: {
               type: 'string',
-              description: 'The API path (e.g., "reactivity-core.html#ref", "composition-api-setup.html", "built-in-components.html")'
-            }
+              description:
+                'The API path (e.g., "reactivity-core.html#ref", "composition-api-setup.html", "built-in-components.html")',
+            },
           },
-          required: ['api']
-        }
-      }
+          required: ['api'],
+        },
+      },
     ];
   }
 
@@ -39,7 +41,7 @@ export class VuePlugin implements Plugin {
 
   getContext(dependencies: Record<string, string>): string {
     let context = '## Vue Framework\n\n';
-    
+
     if ('vue' in dependencies) {
       context += `- Vue version: ${dependencies.vue}\n`;
     }
@@ -57,32 +59,32 @@ export class VuePlugin implements Plugin {
     if (!api.includes('.html')) {
       // Common API shortcuts
       const shortcuts: Record<string, string> = {
-        'ref': 'reactivity-core.html#ref',
-        'reactive': 'reactivity-core.html#reactive',
-        'computed': 'reactivity-core.html#computed',
-        'watch': 'reactivity-core.html#watch',
-        'watchEffect': 'reactivity-core.html#watcheffect',
-        'onMounted': 'composition-api-lifecycle.html#onmounted',
-        'onUnmounted': 'composition-api-lifecycle.html#onunmounted',
-        'defineProps': 'sfc-script-setup.html#defineprops-defineemits',
-        'defineEmits': 'sfc-script-setup.html#defineprops-defineemits',
+        ref: 'reactivity-core.html#ref',
+        reactive: 'reactivity-core.html#reactive',
+        computed: 'reactivity-core.html#computed',
+        watch: 'reactivity-core.html#watch',
+        watchEffect: 'reactivity-core.html#watcheffect',
+        onMounted: 'composition-api-lifecycle.html#onmounted',
+        onUnmounted: 'composition-api-lifecycle.html#onunmounted',
+        defineProps: 'sfc-script-setup.html#defineprops-defineemits',
+        defineEmits: 'sfc-script-setup.html#defineprops-defineemits',
       };
-      
+
       apiPath = shortcuts[api] || `${api}.html`;
     }
 
     const url = `https://vuejs.org/api/${apiPath}`;
-    
+
     try {
       const result = await this.parser.extractContent(url);
       let response = `# Vue 3 API: ${api}\n\n`;
       response += `Source: ${result.url}\n\n`;
       response += result.content;
-      
+
       if (result.truncated) {
         response += '\n\n[Content truncated - visit URL for full documentation]';
       }
-      
+
       return response;
     } catch (error) {
       if (error instanceof Error && error.message.includes('404')) {

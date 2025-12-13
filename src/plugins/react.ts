@@ -16,24 +16,24 @@ export class ReactPlugin implements Plugin {
     return [];
   }
 
-  async handleToolCall(name: string, args: Record<string, unknown>): Promise<string> {
+  async handleToolCall(_name: string, _args: Record<string, unknown>): Promise<string> {
     throw new Error('React plugin tools not yet implemented');
   }
 
   getContext(dependencies: Record<string, string>): string {
     let context = '## React Framework\n\n';
-    
+
     if ('react' in dependencies) {
       context += `- React version: ${dependencies.react}\n`;
     }
-    
+
     if ('next' in dependencies) {
       context += `- Next.js version: ${dependencies.next}\n`;
     }
 
     context += '\n### Documentation Links\n';
     context += '- React Docs: https://react.dev\n';
-    
+
     if ('next' in dependencies) {
       context += '- Next.js Docs: https://nextjs.org/docs\n';
     }

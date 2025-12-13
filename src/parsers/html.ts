@@ -34,9 +34,9 @@ export class HtmlParser {
     try {
       // Import fetch dynamically
       const fetch = (await import('node-fetch')).default;
-      
+
       const response = await fetch(url);
-      
+
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
@@ -44,7 +44,9 @@ export class HtmlParser {
       const html = await response.text();
       return this.parseHtml(html, url, maxLength);
     } catch (error) {
-      throw new Error(`Failed to fetch ${url}: ${error instanceof Error ? error.message : String(error)}`);
+      throw new Error(
+        `Failed to fetch ${url}: ${error instanceof Error ? error.message : String(error)}`
+      );
     }
   }
 
@@ -71,7 +73,7 @@ export class HtmlParser {
       '.main-content',
       '.documentation',
       'article',
-      '.markdown-body'
+      '.markdown-body',
     ];
 
     for (const selector of mainSelectors) {
@@ -89,8 +91,8 @@ export class HtmlParser {
 
     // Clean up whitespace
     content = content
-      .replace(/\s+/g, ' ')  // Replace multiple spaces with single space
-      .replace(/\n\s*\n/g, '\n')  // Remove empty lines
+      .replace(/\s+/g, ' ') // Replace multiple spaces with single space
+      .replace(/\n\s*\n/g, '\n') // Remove empty lines
       .trim();
 
     // Truncate intelligently if needed
@@ -105,7 +107,7 @@ export class HtmlParser {
     return {
       content,
       url,
-      truncated
+      truncated,
     };
   }
 
@@ -122,7 +124,8 @@ export class HtmlParser {
 
     for (const ending of sentenceEndings) {
       const lastIndex = content.lastIndexOf(ending, maxLength);
-      if (lastIndex > maxLength * 0.8) {  // Only use if reasonably close to maxLength
+      if (lastIndex > maxLength * 0.8) {
+        // Only use if reasonably close to maxLength
         bestPoint = Math.max(bestPoint, lastIndex + ending.length);
       }
     }

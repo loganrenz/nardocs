@@ -13,6 +13,16 @@ import * as path from 'path';
 import { NuxtPlugin } from './plugins/nuxt.js';
 import { VuePlugin } from './plugins/vue.js';
 import { ReactPlugin } from './plugins/react.js';
+import { AngularPlugin } from './plugins/angular.js';
+import { SveltePlugin } from './plugins/svelte.js';
+import { TailwindPlugin } from './plugins/tailwind.js';
+import { ExpressPlugin } from './plugins/express.js';
+import { PrismaPlugin } from './plugins/prisma.js';
+import { NextjsPlugin } from './plugins/nextjs.js';
+import { VitePlugin } from './plugins/vite.js';
+import { AstroPlugin } from './plugins/astro.js';
+import { SolidPlugin } from './plugins/solid.js';
+import { RemixPlugin } from './plugins/remix.js';
 import type { Plugin } from './plugins/nuxt.js';
 
 /**
@@ -37,6 +47,16 @@ class ProjectDocsServer {
     new NuxtPlugin(),
     new VuePlugin(),
     new ReactPlugin(),
+    new AngularPlugin(),
+    new SveltePlugin(),
+    new TailwindPlugin(),
+    new ExpressPlugin(),
+    new PrismaPlugin(),
+    new NextjsPlugin(),
+    new VitePlugin(),
+    new AstroPlugin(),
+    new SolidPlugin(),
+    new RemixPlugin(),
   ];
 
   constructor() {
@@ -81,9 +101,7 @@ class ProjectDocsServer {
         ...this.projectInfo.devDependencies,
       };
 
-      this.activePlugins = this.allPlugins.filter((plugin) =>
-        plugin.detect(allDependencies)
-      );
+      this.activePlugins = this.allPlugins.filter((plugin) => plugin.detect(allDependencies));
 
       console.error(`Loaded project: ${this.projectInfo.name}@${this.projectInfo.version}`);
       console.error(`Active plugins: ${this.activePlugins.length}`);
