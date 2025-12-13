@@ -5,7 +5,6 @@ import * as cheerio from 'cheerio';
  */
 export interface ExtractOptions {
   maxLength?: number;
-  preserveCodeBlocks?: boolean;
 }
 
 /**
@@ -119,7 +118,7 @@ export class HtmlParser {
   private findTruncatePoint(content: string, maxLength: number): number {
     // Try to find last sentence ending before maxLength
     const sentenceEndings = ['. ', '.\n', '! ', '!\n', '? ', '?\n'];
-    let bestPoint = maxLength;
+    let bestPoint = -1;
 
     for (const ending of sentenceEndings) {
       const lastIndex = content.lastIndexOf(ending, maxLength);
@@ -128,6 +127,7 @@ export class HtmlParser {
       }
     }
 
-    return bestPoint;
+    // If no good sentence ending found, use maxLength
+    return bestPoint > 0 ? bestPoint : maxLength;
   }
 }
