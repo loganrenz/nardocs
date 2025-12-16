@@ -1,0 +1,7 @@
+# Doppler configuration
+# This file defines the Doppler setup for the nardocs project
+
+setup:
+  project: nardocs
+  config: dev
+

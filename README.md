@@ -380,6 +380,7 @@ ls $PROJECT_PATH/package.json
 
 - Node.js 20+
 - npm or yarn
+- [Doppler CLI](https://docs.doppler.com/docs/install-cli) (for secrets management)
 
 ### Setup
 
@@ -391,20 +392,26 @@ cd nardocs
 # Install dependencies
 npm install
 
+# Setup Doppler (for secrets management)
+doppler login
+doppler setup --project nardocs --config dev
+
 # Build
 npm run build
 
 # Watch mode (for development)
-npm run dev
+doppler run -- npm run dev
 
 # Run tests
-npm run test
+doppler run -- npm run test
 
 # Run tests with coverage
-npm run test:coverage
+doppler run -- npm run test:coverage
 ```
 
-For more details, see [CONTRIBUTING.md](CONTRIBUTING.md).
+For more details, see:
+- [CONTRIBUTING.md](CONTRIBUTING.md) - Contribution guidelines
+- [.github/DOPPLER_SETUP.md](.github/DOPPLER_SETUP.md) - Secrets management setup
 
 ### Testing
 
