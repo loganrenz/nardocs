@@ -1,5 +1,12 @@
 # MCP Project Docs
 
+[![npm version](https://img.shields.io/npm/v/mcp-project-docs.svg)](https://www.npmjs.com/package/mcp-project-docs)
+[![CI](https://github.com/loganrenz/nardocs/actions/workflows/ci.yml/badge.svg)](https://github.com/loganrenz/nardocs/actions/workflows/ci.yml)
+[![Release](https://github.com/loganrenz/nardocs/actions/workflows/release.yml/badge.svg)](https://github.com/loganrenz/nardocs/actions/workflows/release.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Node.js Version](https://img.shields.io/node/v/mcp-project-docs.svg)](https://nodejs.org)
+[![Downloads](https://img.shields.io/npm/dm/mcp-project-docs.svg)](https://www.npmjs.com/package/mcp-project-docs)
+
 A Model Context Protocol (MCP) server that provides intelligent, context-aware documentation lookup for JavaScript/TypeScript projects. Designed to work seamlessly with AI assistants in Cursor IDE and other MCP-compatible tools.
 
 ## What is this?
@@ -371,12 +378,16 @@ ls $PROJECT_PATH/package.json
 
 ### Prerequisites
 
-- Node.js 18+
+- Node.js 20+
 - npm or yarn
 
 ### Setup
 
 ```bash
+# Clone the repository
+git clone https://github.com/loganrenz/nardocs.git
+cd nardocs
+
 # Install dependencies
 npm install
 
@@ -385,7 +396,15 @@ npm run build
 
 # Watch mode (for development)
 npm run dev
+
+# Run tests
+npm run test
+
+# Run tests with coverage
+npm run test:coverage
 ```
+
+For more details, see [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ### Testing
 
@@ -406,7 +425,7 @@ PROJECT_PATH=/path/to/test/project node build/index.js
 
 ## Requirements
 
-- Node.js 18 or higher
+- Node.js 20 or higher
 - A project with `package.json`
 - Internet connection (for fetching documentation)
 
@@ -416,13 +435,36 @@ MIT
 
 ## Contributing
 
-Contributions are welcome! Areas for improvement:
+Contributions are welcome! We're especially interested in:
 
-- Add more framework plugins (Angular, Svelte, etc.)
-- Improve HTML parsing for specific documentation sites
-- Add caching for frequently accessed docs
-- Support for offline documentation
-- Better error messages and suggestions
+- 🎯 New framework plugins
+- 🔧 Improved HTML parsing for documentation sites
+- 💾 Caching for frequently accessed docs
+- 📱 Offline documentation support
+- 🎨 Better error messages and suggestions
+
+Please see [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
+
+### Quick Start for Contributors
+
+```bash
+# Fork and clone the repo
+git clone https://github.com/YOUR_USERNAME/nardocs.git
+cd nardocs
+
+# Install dependencies
+npm install
+
+# Make your changes and test
+npm run test
+npm run lint
+
+# Commit using conventional commits
+git commit -m "feat: add support for new framework"
+
+# Push and create a PR
+git push origin your-branch-name
+```
 
 ## Credits
 
