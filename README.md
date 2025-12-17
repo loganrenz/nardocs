@@ -33,17 +33,31 @@ AI assistants can have outdated information about framework APIs, especially for
 
 ## Installation
 
-### Option 1: Using npx (Recommended)
+### Recommended: Install as Dev Dependency
 
-No installation needed! Just configure it in your Cursor IDE or other MCP client.
+Install in your project so the server automatically detects your dependencies:
 
-### Option 2: Local Installation
+```bash
+npm install --save-dev mcp-project-docs
+```
+
+Then configure in your Cursor IDE settings (see Configuration below).
+
+### Alternative: Using npx
+
+No installation needed, but you'll need to specify the project path manually:
+
+```bash
+# The server will be downloaded and run on-demand
+```
+
+### Alternative: Global Installation
 
 ```bash
 npm install -g mcp-project-docs
 ```
 
-### Option 3: From Source
+### From Source
 
 ```bash
 git clone <repository-url>
@@ -57,7 +71,26 @@ npm link
 
 ### Cursor IDE
 
-Add to your Cursor settings (`.cursorrules` or MCP settings):
+#### Option 1: Installed as Dev Dependency (Recommended)
+
+If you installed `mcp-project-docs` as a dev dependency in your project:
+
+```json
+{
+  "mcpServers": {
+    "project-docs": {
+      "command": "npx",
+      "args": ["-y", "mcp-project-docs"]
+    }
+  }
+}
+```
+
+**That's it!** The server automatically detects your project's `package.json` from the current working directory.
+
+#### Option 2: Using npx or Global Install
+
+If you're using `npx` without installing locally, or using a global install, you need to specify the project path:
 
 ```json
 {
@@ -299,6 +332,8 @@ This helps the AI know when and how to use each tool effectively.
 ## How It Works
 
 1. **Project Detection**: Reads your `package.json` to identify dependencies and versions
+   - When installed as a dev dependency, automatically detects your project directory
+   - Falls back to `PROJECT_PATH` environment variable if needed
 2. **Plugin Activation**: Activates built-in plugins for major frameworks (Nuxt, Vue, React, etc.)
 3. **Auto-Discovery**: Scans npm registry for documentation URLs of remaining packages
 4. **Dynamic Plugin Creation**: Creates plugins on-the-fly for discovered packages
@@ -306,6 +341,16 @@ This helps the AI know when and how to use each tool effectively.
 6. **Tool Registration**: Registers framework-specific documentation tools
 7. **On-Demand Fetching**: Fetches and parses documentation when AI needs it
 8. **Clean Extraction**: Returns formatted, relevant content to AI
+
+### Why Install as Dev Dependency?
+
+Installing `mcp-project-docs` as a dev dependency in your project has several advantages:
+
+- ✅ **Automatic Path Detection**: No need to manually configure `PROJECT_PATH`
+- ✅ **Project-Specific**: Each project can have its own version
+- ✅ **Version Control**: Lock the version in your `package.json`
+- ✅ **Team Consistency**: Everyone on your team uses the same configuration
+- ✅ **Simpler Setup**: Just `npm install --save-dev mcp-project-docs` and configure MCP
 
 ## Architecture
 

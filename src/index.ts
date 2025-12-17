@@ -134,8 +134,12 @@ class ProjectDocsServer {
       }
     );
 
-    // Get project path from environment
+    // Get project path from environment or current working directory
+    // When installed as a dev dependency and run via npx, process.cwd()
+    // will be the consuming project's directory (where package.json is)
     this.projectPath = process.env.PROJECT_PATH || process.cwd();
+
+    console.error(`Project path: ${this.projectPath}`);
 
     // Check if auto-discovery is enabled (default: true)
     this.autoDiscoveryEnabled = process.env.AUTO_DISCOVERY !== 'false';
