@@ -62,15 +62,16 @@ jobs:
           echo "Verifying main entry point:"
           test -f build/index.js && echo "✓ build/index.js exists" || exit 1
 
-      - name: Verify Doppler secrets
+      - name: Configure npm authentication
         env:
           DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
         run: |
-          echo "Verifying Doppler connection..."
-          doppler secrets --only-names
-          echo "NPM_TOKEN length: $(doppler run -- printenv NPM_TOKEN | wc -c) chars"
+          echo "Configuring npm with Doppler token..."
+          NPM_TOKEN=$(doppler secrets get NPM_TOKEN --plain)
+          echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
+          echo "NPM_TOKEN length: ${#NPM_TOKEN} chars"
           echo "Testing npm auth..."
-          doppler run -- sh -c 'curl -s -H "Authorization: Bearer $NPM_TOKEN" https://registry.npmjs.org/-/whoami'
+          npm whoami
 
       - name: Release
         env:
