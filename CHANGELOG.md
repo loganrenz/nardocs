@@ -1,3 +1,9 @@
+# [1.3.0](https://github.com/loganrenz/nardocs/compare/v1.2.0...v1.3.0) (2025-12-17)
+
+### Features
+
+- improve documentation URL discovery with 50+ popular packages ([b146bdc](https://github.com/loganrenz/nardocs/commit/b146bdc62a4893ce9520d1dc596061fad96a7487))
+
 # [1.2.0](https://github.com/loganrenz/nardocs/compare/v1.1.0...v1.2.0) (2025-12-17)
 
 ### Features
