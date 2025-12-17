@@ -254,4 +254,38 @@ describe('End-to-end: Discover and fetch docs', () => {
     expect(tools[0].name).toBe('check_drizzle_orm_docs');
     expect(tools[0].description).toContain('drizzle-orm');
   });
+
+  it('should discover VueUse with correct documentation URL', async () => {
+    const scanner = new PackageScanner();
+
+    const discovery = await scanner.discoverPackage('@vueuse/core');
+    expect(discovery.docsUrl).toBe('https://vueuse.org');
+    expect(discovery.confidence).toBe('high');
+    expect(discovery.name).toBe('@vueuse/core');
+
+    const plugin = new DynamicPlugin(discovery);
+    const tools = plugin.getTools();
+
+    expect(tools[0].name).toBe('check_vueuse_core_docs');
+    expect(tools[0].description).toContain('@vueuse/core');
+  });
+
+  it('should discover Pinia with correct documentation URL', async () => {
+    const scanner = new PackageScanner();
+
+    const discovery = await scanner.discoverPackage('pinia');
+    expect(discovery.docsUrl).toBe('https://pinia.vuejs.org/');
+    expect(discovery.confidence).toBe('high');
+
+    const plugin = new DynamicPlugin(discovery);
+    expect(plugin.toolName).toBe('pinia');
+  });
+
+  it('should discover TanStack Query with correct documentation URL', async () => {
+    const scanner = new PackageScanner();
+
+    const discovery = await scanner.discoverPackage('@tanstack/vue-query');
+    expect(discovery.docsUrl).toBe('https://tanstack.com/query/latest/docs/vue/overview');
+    expect(discovery.confidence).toBe('high');
+  });
 });

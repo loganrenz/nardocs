@@ -141,6 +141,55 @@ const KNOWN_DOCS_OVERRIDES: Record<string, string> = {
   'class-variance-authority': 'https://cva.style/docs',
   clsx: 'https://github.com/lukeed/clsx#readme',
   'tailwind-merge': 'https://github.com/dcastil/tailwind-merge#readme',
+  // VueUse and related
+  '@vueuse/core': 'https://vueuse.org',
+  '@vueuse/components': 'https://vueuse.org/guide/components.html',
+  '@vueuse/router': 'https://vueuse.org/router/README.html',
+  '@vueuse/integrations': 'https://vueuse.org/integrations/README.html',
+  '@vueuse/head': 'https://github.com/vueuse/head#readme',
+  '@vueuse/motion': 'https://motion.vueuse.org/',
+  // Nuxt ecosystem
+  '@nuxtjs/color-mode': 'https://color-mode.nuxtjs.org/',
+  '@nuxtjs/device': 'https://github.com/nuxt-modules/device#readme',
+  '@nuxtjs/google-fonts': 'https://google-fonts.nuxtjs.org/',
+  '@nuxtjs/i18n': 'https://i18n.nuxtjs.org/',
+  '@nuxtjs/tailwindcss': 'https://tailwindcss.nuxtjs.org/',
+  '@nuxtjs/supabase': 'https://supabase.nuxtjs.org/',
+  '@pinia/nuxt': 'https://pinia.vuejs.org/ssr/nuxt.html',
+  '@vite-pwa/nuxt': 'https://vite-pwa-org.netlify.app/frameworks/nuxt.html',
+  // Vue ecosystem
+  'vue-router': 'https://router.vuejs.org/',
+  pinia: 'https://pinia.vuejs.org/',
+  vuex: 'https://vuex.vuejs.org/',
+  'vue-i18n': 'https://vue-i18n.intlify.dev/',
+  '@intlify/vue-i18n': 'https://vue-i18n.intlify.dev/',
+  // Testing libraries
+  '@testing-library/vue': 'https://testing-library.com/docs/vue-testing-library/intro/',
+  '@testing-library/react': 'https://testing-library.com/docs/react-testing-library/intro/',
+  '@testing-library/user-event': 'https://testing-library.com/docs/user-event/intro',
+  '@vue/test-utils': 'https://test-utils.vuejs.org/',
+  // React ecosystem
+  'react-router-dom': 'https://reactrouter.com/en/main',
+  'react-hook-form': 'https://react-hook-form.com/get-started',
+  formik: 'https://formik.org/docs/overview',
+  // UI component libraries
+  '@headlessui/vue': 'https://headlessui.com/v1/vue',
+  '@headlessui/react': 'https://headlessui.com/v1/react',
+  'radix-vue': 'https://www.radix-vue.com/',
+  '@radix-ui/react-accordion': 'https://www.radix-ui.com/primitives/docs/components/accordion',
+  'shadcn-vue': 'https://www.shadcn-vue.com/',
+  // Animation libraries
+  'vue-motion': 'https://motion.vueuse.org/',
+  // Form validation
+  'vee-validate': 'https://vee-validate.logaretm.com/v4/',
+  // Date/time
+  luxon: 'https://moment.github.io/luxon/',
+  // Utilities
+  'lodash-es': 'https://lodash.com/docs',
+  'ts-pattern': 'https://github.com/gvergnaud/ts-pattern#readme',
+  'type-fest': 'https://github.com/sindresorhus/type-fest#readme',
+  // API clients
+  ofetch: 'https://github.com/unjs/ofetch#readme',
 };
 
 /**
@@ -255,15 +304,27 @@ export class PackageScanner {
 
     // Priority 1: Homepage (usually the docs site)
     if (metadata.homepage) {
-      // Filter out npm/github links as they're not docs
       const homepage = metadata.homepage.toLowerCase();
-      if (
-        !homepage.includes('npmjs.com') &&
-        !homepage.includes('github.com') &&
-        !homepage.includes('gitlab.com')
-      ) {
+
+      // Filter out npm/github/gitlab repository links as they're not docs
+      // But allow GitHub Pages (*.github.io) as they often host docs
+      const isGitHubPages = homepage.includes('.github.io');
+      const isRepositoryLink =
+        (homepage.includes('github.com') && !isGitHubPages) ||
+        homepage.includes('gitlab.com') ||
+        homepage.includes('npmjs.com');
+
+      if (!isRepositoryLink) {
         result.docsUrl = metadata.homepage;
-        result.confidence = 'high';
+        // Higher confidence if URL contains doc-related keywords
+        const hasDocKeywords =
+          homepage.includes('docs') ||
+          homepage.includes('documentation') ||
+          homepage.includes('guide') ||
+          homepage.includes('.dev') ||
+          homepage.includes('.io') ||
+          isGitHubPages;
+        result.confidence = hasDocKeywords ? 'high' : 'medium';
       }
     }
 
