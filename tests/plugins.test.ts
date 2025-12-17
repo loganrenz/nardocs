@@ -1,7 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { NuxtPlugin } from '../src/plugins/nuxt.js';
 import { VuePlugin } from '../src/plugins/vue.js';
-import { ReactPlugin } from '../src/plugins/react.js';
 import { AngularPlugin } from '../src/plugins/angular.js';
 import { SveltePlugin } from '../src/plugins/svelte.js';
 import { TailwindPlugin } from '../src/plugins/tailwind.js';
@@ -128,44 +127,6 @@ describe('VuePlugin', () => {
       const context = plugin.getContext({ vue: '^3.0.0' });
       expect(context).toContain('Vue Framework');
       expect(context).toContain('3.0.0');
-    });
-  });
-});
-
-describe('ReactPlugin', () => {
-  const plugin = new ReactPlugin();
-
-  describe('detect', () => {
-    it('should detect react dependency', () => {
-      expect(plugin.detect({ react: '^18.0.0' })).toBe(true);
-    });
-
-    it('should detect next dependency', () => {
-      expect(plugin.detect({ next: '^14.0.0' })).toBe(true);
-    });
-
-    it('should not detect when react is not present', () => {
-      expect(plugin.detect({ vue: '^3.0.0' })).toBe(false);
-    });
-  });
-
-  describe('getTools', () => {
-    it('should return empty tools (not yet implemented)', () => {
-      const tools = plugin.getTools();
-      expect(tools).toHaveLength(0);
-    });
-  });
-
-  describe('getContext', () => {
-    it('should return context with react version', () => {
-      const context = plugin.getContext({ react: '^18.0.0' });
-      expect(context).toContain('React Framework');
-      expect(context).toContain('18.0.0');
-    });
-
-    it('should include next.js info when present', () => {
-      const context = plugin.getContext({ react: '^18.0.0', next: '^14.0.0' });
-      expect(context).toContain('Next.js');
     });
   });
 });

@@ -24,6 +24,7 @@ AI assistants can have outdated information about framework APIs, especially for
 ## Features
 
 - 🔍 **Auto-detection**: Automatically detects Nuxt, Vue, React, and other frameworks in your project
+- 🤖 **Auto-discovery**: Automatically discovers documentation for ANY npm package in your project
 - 📚 **Dynamic Documentation**: Fetches latest docs from official sources on demand
 - 🎯 **Context-Aware**: Knows which versions of dependencies you're using
 - 🧹 **Clean Output**: Extracts and formats documentation content for optimal AI consumption
@@ -214,6 +215,48 @@ Configure according to your client's documentation, ensuring:
 
 The plugin system is already in place - contributions welcome!
 
+### Auto-Discovery (Any npm Package)
+
+In addition to built-in plugins, the server **automatically discovers documentation** for ANY npm package in your project!
+
+**How it works:**
+
+1. Scans your `package.json` for all dependencies
+2. Queries the npm registry for package metadata (homepage, repository, etc.)
+3. Discovers documentation URLs from package metadata
+4. Creates dynamic plugins with `check_{package}_docs` tools
+
+**Example:** If your project has `lodash` installed, you'll automatically get:
+
+```
+AI: Let me check the lodash documentation for array methods...
+[AI calls: check_lodash_docs({ topic: "array" })]
+[Server returns: Lodash array documentation]
+```
+
+**Supported packages include:**
+
+- 100+ popular packages with known documentation URLs (lodash, axios, zod, etc.)
+- Any package with a `homepage` field pointing to documentation
+- GitHub README fallback for packages without dedicated docs
+
+**Disable auto-discovery:**
+
+```json
+{
+  "mcpServers": {
+    "project-docs": {
+      "command": "npx",
+      "args": ["-y", "mcp-project-docs"],
+      "env": {
+        "PROJECT_PATH": "/path/to/project",
+        "AUTO_DISCOVERY": "false"
+      }
+    }
+  }
+}
+```
+
 ## Usage Examples
 
 ### In Cursor IDE
@@ -256,23 +299,30 @@ This helps the AI know when and how to use each tool effectively.
 ## How It Works
 
 1. **Project Detection**: Reads your `package.json` to identify dependencies and versions
-2. **Plugin Activation**: Activates relevant plugins based on detected frameworks
-3. **Resource Loading**: Makes project context available to AI automatically
-4. **Tool Registration**: Registers framework-specific documentation tools
-5. **On-Demand Fetching**: Fetches and parses documentation when AI needs it
-6. **Clean Extraction**: Returns formatted, relevant content to AI
+2. **Plugin Activation**: Activates built-in plugins for major frameworks (Nuxt, Vue, React, etc.)
+3. **Auto-Discovery**: Scans npm registry for documentation URLs of remaining packages
+4. **Dynamic Plugin Creation**: Creates plugins on-the-fly for discovered packages
+5. **Resource Loading**: Makes project context available to AI automatically
+6. **Tool Registration**: Registers framework-specific documentation tools
+7. **On-Demand Fetching**: Fetches and parses documentation when AI needs it
+8. **Clean Extraction**: Returns formatted, relevant content to AI
 
 ## Architecture
 
 ```
 src/
-├── index.ts           # Main MCP server
+├── index.ts              # Main MCP server
 ├── parsers/
-│   └── html.ts       # HTML content extraction
+│   └── html.ts           # HTML content extraction
+├── discovery/
+│   ├── package-scanner.ts  # npm registry metadata fetcher
+│   ├── docs-crawler.ts     # Documentation site crawler
+│   ├── dynamic-plugin.ts   # Auto-generated plugins
+│   └── index.ts            # Discovery module exports
 └── plugins/
-    ├── nuxt.ts       # Nuxt-specific tools
-    ├── vue.ts        # Vue-specific tools
-    └── react.ts      # React-specific tools (stub)
+    ├── nuxt.ts           # Nuxt-specific tools
+    ├── vue.ts            # Vue-specific tools
+    └── react.ts          # React-specific tools (stub)
 ```
 
 ### Plugin System
@@ -410,6 +460,7 @@ doppler run -- npm run test:coverage
 ```
 
 For more details, see:
+
 - [CONTRIBUTING.md](CONTRIBUTING.md) - Contribution guidelines
 - [.github/DOPPLER_SETUP.md](.github/DOPPLER_SETUP.md) - Secrets management setup
 

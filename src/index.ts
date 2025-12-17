@@ -12,7 +12,6 @@ import * as fs from 'fs/promises';
 import * as path from 'path';
 import { NuxtPlugin } from './plugins/nuxt.js';
 import { VuePlugin } from './plugins/vue.js';
-import { ReactPlugin } from './plugins/react.js';
 import { AngularPlugin } from './plugins/angular.js';
 import { SveltePlugin } from './plugins/svelte.js';
 import { TailwindPlugin } from './plugins/tailwind.js';
@@ -24,6 +23,7 @@ import { AstroPlugin } from './plugins/astro.js';
 import { SolidPlugin } from './plugins/solid.js';
 import { RemixPlugin } from './plugins/remix.js';
 import type { Plugin } from './plugins/nuxt.js';
+import { PackageScanner, createDynamicPlugin } from './discovery/index.js';
 
 /**
  * Project information loaded from package.json
@@ -36,6 +36,62 @@ interface ProjectInfo {
 }
 
 /**
+ * Packages to skip for auto-discovery (types, build tools, internal packages)
+ */
+const SKIP_PACKAGES = new Set([
+  // TypeScript types
+  '@types/node',
+  '@types/react',
+  '@types/react-dom',
+  'typescript',
+  // Build tools and bundlers (already have plugins or not needed)
+  'webpack',
+  'rollup',
+  'esbuild',
+  'parcel',
+  'turbo',
+  // Linters and formatters
+  'eslint',
+  'prettier',
+  'stylelint',
+  '@eslint/js',
+  'eslint-config-prettier',
+  'eslint-plugin-prettier',
+  '@typescript-eslint/eslint-plugin',
+  '@typescript-eslint/parser',
+  'typescript-eslint',
+  // Testing (usually not needed for docs)
+  '@vitest/coverage-v8',
+  '@testing-library/jest-dom',
+  // Git hooks
+  'husky',
+  'lint-staged',
+  // Release tools
+  'semantic-release',
+  '@semantic-release/changelog',
+  '@semantic-release/git',
+  // This package itself
+  'mcp-project-docs',
+  '@modelcontextprotocol/sdk',
+]);
+
+/**
+ * Check if a package should be skipped for auto-discovery
+ */
+function shouldSkipPackage(packageName: string): boolean {
+  // Skip if in the skip list
+  if (SKIP_PACKAGES.has(packageName)) return true;
+
+  // Skip @types packages
+  if (packageName.startsWith('@types/')) return true;
+
+  // Skip eslint configs and plugins
+  if (packageName.includes('eslint-config') || packageName.includes('eslint-plugin')) return true;
+
+  return false;
+}
+
+/**
  * Main MCP server class
  */
 class ProjectDocsServer {
@@ -43,10 +99,12 @@ class ProjectDocsServer {
   private projectPath: string;
   private projectInfo: ProjectInfo | null = null;
   private activePlugins: Plugin[] = [];
-  private allPlugins: Plugin[] = [
+  private packageScanner = new PackageScanner();
+
+  // Built-in plugins for major frameworks
+  private builtInPlugins: Plugin[] = [
     new NuxtPlugin(),
     new VuePlugin(),
-    new ReactPlugin(),
     new AngularPlugin(),
     new SveltePlugin(),
     new TailwindPlugin(),
@@ -58,6 +116,9 @@ class ProjectDocsServer {
     new SolidPlugin(),
     new RemixPlugin(),
   ];
+
+  // Track which packages are handled by built-in plugins
+  private builtInPackages = new Set<string>();
 
   constructor() {
     this.server = new Server(
@@ -76,8 +137,13 @@ class ProjectDocsServer {
     // Get project path from environment
     this.projectPath = process.env.PROJECT_PATH || process.cwd();
 
+    // Check if auto-discovery is enabled (default: true)
+    this.autoDiscoveryEnabled = process.env.AUTO_DISCOVERY !== 'false';
+
     this.setupHandlers();
   }
+
+  private autoDiscoveryEnabled: boolean;
 
   /**
    * Load project information from package.json
@@ -95,22 +161,117 @@ class ProjectDocsServer {
         devDependencies: packageJson.devDependencies || {},
       };
 
-      // Detect and activate plugins
+      // Detect and activate built-in plugins
       const allDependencies = {
         ...this.projectInfo.dependencies,
         ...this.projectInfo.devDependencies,
       };
 
-      this.activePlugins = this.allPlugins.filter((plugin) => plugin.detect(allDependencies));
+      // First, activate built-in plugins and track which packages they handle
+      this.activePlugins = [];
+      this.builtInPackages.clear();
+
+      for (const plugin of this.builtInPlugins) {
+        if (plugin.detect(allDependencies)) {
+          this.activePlugins.push(plugin);
+          // Track packages handled by this plugin
+          this.trackBuiltInPackages(plugin, allDependencies);
+        }
+      }
 
       console.error(`Loaded project: ${this.projectInfo.name}@${this.projectInfo.version}`);
-      console.error(`Active plugins: ${this.activePlugins.length}`);
+      console.error(`Built-in plugins activated: ${this.activePlugins.length}`);
+
+      // Auto-discover plugins for remaining packages
+      if (this.autoDiscoveryEnabled) {
+        await this.discoverAdditionalPlugins(allDependencies);
+      }
+
+      console.error(`Total active plugins: ${this.activePlugins.length}`);
     } catch (error) {
       console.error(`Failed to load project info from ${this.projectPath}:`, error);
       throw new Error(
         `Could not load package.json from ${this.projectPath}. Please ensure PROJECT_PATH environment variable points to a valid Node.js project.`
       );
     }
+  }
+
+  /**
+   * Track which packages are handled by built-in plugins
+   */
+  private trackBuiltInPackages(plugin: Plugin, dependencies: Record<string, string>): void {
+    // Map of plugin types to their handled packages
+    const pluginPackages: Record<string, string[]> = {
+      NuxtPlugin: [
+        'nuxt',
+        '@nuxt/kit',
+        '@nuxt/ui',
+        '@nuxt/image',
+        '@nuxt/content',
+        '@nuxtjs/i18n',
+        '@nuxtjs/tailwindcss',
+      ],
+      VuePlugin: ['vue', '@vue/compiler-sfc'],
+      AngularPlugin: ['@angular/core', '@angular/common'],
+      SveltePlugin: ['svelte', '@sveltejs/kit'],
+      TailwindPlugin: ['tailwindcss'],
+      ExpressPlugin: ['express'],
+      PrismaPlugin: ['prisma', '@prisma/client'],
+      NextjsPlugin: ['next'],
+      VitePlugin: ['vite'],
+      AstroPlugin: ['astro'],
+      SolidPlugin: ['solid-js'],
+      RemixPlugin: ['@remix-run/react', '@remix-run/node'],
+    };
+
+    const pluginName = plugin.constructor.name;
+    const packages = pluginPackages[pluginName] || [];
+
+    for (const pkg of packages) {
+      if (pkg in dependencies) {
+        this.builtInPackages.add(pkg);
+      }
+    }
+  }
+
+  /**
+   * Discover and create plugins for packages not handled by built-in plugins
+   */
+  private async discoverAdditionalPlugins(dependencies: Record<string, string>): Promise<void> {
+    // Find packages that need auto-discovery
+    const packagesToDiscover = Object.keys(dependencies).filter((pkg) => {
+      // Skip if handled by built-in plugin
+      if (this.builtInPackages.has(pkg)) return false;
+
+      // Skip utility packages
+      if (shouldSkipPackage(pkg)) return false;
+
+      return true;
+    });
+
+    if (packagesToDiscover.length === 0) {
+      console.error('No additional packages to discover');
+      return;
+    }
+
+    console.error(`Discovering documentation for ${packagesToDiscover.length} packages...`);
+
+    // Discover packages in parallel
+    const discoveries = await this.packageScanner.discoverPackages(packagesToDiscover);
+
+    // Create dynamic plugins for packages with documentation
+    let dynamicPluginCount = 0;
+    for (const [packageName, discovery] of discoveries) {
+      // Only create plugins for packages with high/medium confidence docs
+      if (discovery.docsUrl && discovery.confidence !== 'low') {
+        const dynamicPlugin = createDynamicPlugin(discovery);
+        this.activePlugins.push(dynamicPlugin);
+        dynamicPluginCount++;
+        console.error(`  + ${packageName}: ${discovery.docsUrl}`);
+      }
+    }
+
+    console.error(`Created ${dynamicPluginCount} dynamic plugins`);
   }
 
   /**
