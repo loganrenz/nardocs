@@ -1,3 +1,21 @@
+# 1.0.0 (2025-12-17)
+
+### Bug Fixes
+
+- update minimum Node.js version to 20 for Vitest 4.x compatibility ([25f77d0](https://github.com/loganrenz/nardocs/commit/25f77d0bcb2cd298a7f847aa218d1bb90815d0f6))
+
+### Features
+
+- add semantic-release and productionize npm package workflow ([5957aa1](https://github.com/loganrenz/nardocs/commit/5957aa1f24d7d59d847c9e848f8f6566e90b8a69))
+- configure npm provenance for secure automated publishing ([1a7a041](https://github.com/loganrenz/nardocs/commit/1a7a041843cb7c7ecbb33306d70de2687083c945))
+- enhance Nuxt plugin with comprehensive documentation support ([2f9b0ba](https://github.com/loganrenz/nardocs/commit/2f9b0babf87f5ef95e6d761418f57ff1ef7bbd4d))
+- integrate Doppler for secure secrets management ([632637e](https://github.com/loganrenz/nardocs/commit/632637ec14180c0dd7752633598abece4c8e72ae))
+
+### BREAKING CHANGES
+
+- Developers must now use Doppler CLI for local development
+- Minimum Node.js version is now 20.0.0 (was 18.0.0)
+
 # Changelog
 
 All notable changes to this project will be documented in this file.
