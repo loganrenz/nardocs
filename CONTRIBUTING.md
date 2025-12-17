@@ -38,15 +38,15 @@ We welcome plugins for new frameworks! Here's how:
      detect(dependencies: Record<string, string>): boolean {
        // Return true if framework is in dependencies
      }
-     
+
      getTools(): ToolDefinition[] {
        // Return MCP tool definitions
      }
-     
+
      async handleToolCall(name: string, args: Record<string, unknown>): Promise<string> {
        // Handle tool execution
      }
-     
+
      getContext(dependencies: Record<string, string>): string {
        // Return markdown context
      }
@@ -59,6 +59,7 @@ We welcome plugins for new frameworks! Here's how:
 ### Pull Request Process
 
 1. **Fork the repository** and create a new branch from `main`
+
    ```bash
    git checkout -b feature/your-feature-name
    ```
@@ -70,6 +71,7 @@ We welcome plugins for new frameworks! Here's how:
    - Update documentation as needed
 
 3. **Test your changes**:
+
    ```bash
    npm run lint          # Check code style
    npm run typecheck     # Verify TypeScript
@@ -78,6 +80,7 @@ We welcome plugins for new frameworks! Here's how:
    ```
 
 4. **Commit with conventional commits**:
+
    ```bash
    git commit -m "feat: add support for framework X"
    git commit -m "fix: resolve documentation parsing issue"
@@ -94,6 +97,7 @@ We welcome plugins for new frameworks! Here's how:
    - `chore`: Maintenance tasks
 
 5. **Push and create a Pull Request**:
+
    ```bash
    git push origin feature/your-feature-name
    ```
@@ -203,6 +207,7 @@ Follow [Conventional Commits](https://www.conventionalcommits.org/):
 ```
 
 Examples:
+
 ```
 feat(nuxt): add support for Nuxt UI v4 components
 
@@ -216,6 +221,7 @@ BREAKING CHANGE: minimum Node.js version is now 20
 ## Questions?
 
 Feel free to:
+
 - Open an issue for discussion
 - Ask questions in pull requests
 - Reach out to maintainers
@@ -223,5 +229,3 @@ Feel free to:
 ## License
 
 By contributing, you agree that your contributions will be licensed under the MIT License.
-
-

@@ -33,9 +33,16 @@ describe('NuxtPlugin', () => {
   describe('getTools', () => {
     it('should return nuxt tools', () => {
       const tools = plugin.getTools();
-      expect(tools).toHaveLength(2);
+      expect(tools).toHaveLength(9);
       expect(tools[0].name).toBe('check_nuxt_ui_component');
       expect(tools[1].name).toBe('check_nuxt_feature');
+      expect(tools[2].name).toBe('check_nuxt_module');
+      expect(tools[3].name).toBe('check_nuxt_image');
+      expect(tools[4].name).toBe('check_nuxt_content');
+      expect(tools[5].name).toBe('check_nuxt_i18n');
+      expect(tools[6].name).toBe('check_vueuse');
+      expect(tools[7].name).toBe('check_pinia');
+      expect(tools[8].name).toBe('check_nuxt_seo');
     });
   });
 
@@ -49,6 +56,44 @@ describe('NuxtPlugin', () => {
     it('should include nuxt ui info when present', () => {
       const context = plugin.getContext({ nuxt: '^3.0.0', '@nuxt/ui': '^2.0.0' });
       expect(context).toContain('Nuxt UI version');
+    });
+
+    it('should detect and list installed modules', () => {
+      const context = plugin.getContext({
+        nuxt: '^3.0.0',
+        '@nuxt/image': '^1.0.0',
+        '@nuxt/content': '^2.0.0',
+        '@nuxtjs/i18n': '^8.0.0',
+      });
+      expect(context).toContain('Installed Nuxt Modules');
+      expect(context).toContain('Nuxt Image');
+      expect(context).toContain('Nuxt Content');
+      expect(context).toContain('Nuxt i18n');
+    });
+
+    it('should include module documentation links', () => {
+      const context = plugin.getContext({
+        nuxt: '^3.0.0',
+        '@nuxt/image': '^1.0.0',
+      });
+      expect(context).toContain('Module Documentation');
+      expect(context).toContain('https://image.nuxt.com');
+    });
+
+    it('should detect pinia module', () => {
+      const context = plugin.getContext({
+        nuxt: '^3.0.0',
+        '@pinia/nuxt': '^0.5.0',
+      });
+      expect(context).toContain('Pinia');
+    });
+
+    it('should detect vueuse module', () => {
+      const context = plugin.getContext({
+        nuxt: '^3.0.0',
+        '@vueuse/nuxt': '^10.0.0',
+      });
+      expect(context).toContain('VueUse');
     });
   });
 });

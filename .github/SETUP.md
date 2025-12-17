@@ -37,6 +37,7 @@ We use [Conventional Commits](https://www.conventionalcommits.org/):
 - `BREAKING CHANGE:` → Major version bump (1.0.0 → 2.0.0)
 
 **Other types** (no release):
+
 - `docs:` → Documentation only
 - `style:` → Code style/formatting
 - `refactor:` → Code refactoring
@@ -97,6 +98,7 @@ git push origin main
 ```
 
 The release workflow will:
+
 1. Run CI (lint, typecheck, test, build)
 2. Determine version based on commits since last release
 3. Update CHANGELOG.md
@@ -122,6 +124,7 @@ npm run semantic-release
 ### CI Workflow (`ci.yml`)
 
 Runs on every push and PR:
+
 - ✅ Lint check
 - ✅ Type check
 - ✅ Tests with coverage (Node 20, 22)
@@ -130,6 +133,7 @@ Runs on every push and PR:
 ### Release Workflow (`release.yml`)
 
 Runs on push to `main`:
+
 - Runs all CI checks
 - Analyzes commits
 - Bumps version
@@ -157,6 +161,7 @@ Runs on push to `main`:
 ### .releaserc.json
 
 Configures semantic-release behavior:
+
 - Branch: `main`
 - Plugins: commit-analyzer, release-notes-generator, changelog, npm, github, git
 - Changelog file: `CHANGELOG.md`
@@ -186,6 +191,7 @@ Configures semantic-release behavior:
 ### Provenance
 
 The package is published with provenance attestation, which:
+
 - Links the package to the source repository
 - Verifies the build process
 - Increases trust and security
@@ -193,6 +199,7 @@ The package is published with provenance attestation, which:
 ### Permissions
 
 Workflows use minimal required permissions:
+
 - `contents: write` - For creating releases and committing changelog
 - `issues: write` - For commenting on issues
 - `pull-requests: write` - For commenting on PRs
@@ -215,16 +222,19 @@ Workflows use minimal required permissions:
 ### Troubleshooting
 
 **Release didn't trigger:**
+
 - Check commit message follows conventional commits format
 - Ensure NPM_TOKEN secret is set correctly
 - Look at workflow run logs in Actions tab
 
 **Build failed:**
+
 - Check lint/test errors in CI
 - Fix issues and push again
 - Release will retry on next push
 
 **npm publish failed:**
+
 - Verify NPM_TOKEN is valid
 - Check if version already exists on npm
 - Ensure package name is available
@@ -256,5 +266,3 @@ Breaking changes should be rare and well-documented.
 ---
 
 **Questions?** Open an issue or see CONTRIBUTING.md
-
-

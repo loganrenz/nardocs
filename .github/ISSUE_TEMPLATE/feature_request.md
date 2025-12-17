@@ -26,9 +26,9 @@ assignees: ''
 
 <!-- Provide specific examples of how this feature would be used -->
 
-1. 
-2. 
-3. 
+1.
+2.
+3.
 
 ## Framework/Library
 
@@ -50,5 +50,3 @@ assignees: ''
 - [ ] Yes, I'd like to submit a PR
 - [ ] No, but I can help test it
 - [ ] No, just suggesting
-
-

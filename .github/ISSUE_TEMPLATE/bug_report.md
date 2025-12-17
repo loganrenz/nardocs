@@ -12,10 +12,10 @@ assignees: ''
 
 ## Steps to Reproduce
 
-1. 
-2. 
-3. 
-4. 
+1.
+2.
+3.
+4.
 
 ## Expected Behavior
 
@@ -75,5 +75,3 @@ Paste error messages or logs here
 ## Possible Solution
 
 <!-- Optional: suggest a fix or reason for the bug -->
-
-
