@@ -301,4 +301,18 @@ describe('End-to-end: Discover and fetch docs', () => {
     expect(discovery.docsUrl).not.toBe(discovery.npmUrl); // Should not fall back to npm
     expect(['high', 'medium']).toContain(discovery.confidence);
   }, 10000); // 10 second timeout for network requests
+
+  it('should discover Vercel packages using organization patterns', async () => {
+    const scanner = new PackageScanner();
+
+    // @vercel/og has no homepage or repository in npm metadata
+    // Should be discovered via organization pattern matching
+    const discovery = await scanner.discoverPackage('@vercel/og');
+
+    expect(discovery.docsUrl).toBeTruthy();
+    expect(discovery.docsUrl).toContain('vercel.com/docs');
+    expect(discovery.confidence).toBe('high');
+
+    console.log(`Discovered @vercel/og docs at: ${discovery.docsUrl}`);
+  }, 10000); // 10 second timeout for network requests
 });

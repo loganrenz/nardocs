@@ -267,6 +267,83 @@ export class PackageScanner {
   }
 
   /**
+   * Try to find documentation based on package scope/organization
+   */
+  private async tryOrganizationDocs(
+    packageName: string
+  ): Promise<{ url: string; confidence: 'high' | 'medium' } | null> {
+    // Extract scope from scoped packages (@org/package)
+    const scopeMatch = packageName.match(/^@([^/]+)\//);
+    if (!scopeMatch) return null;
+
+    const org = scopeMatch[1];
+    const pkgName = packageName.substring(org.length + 2); // Remove @org/
+
+    // Known organization documentation patterns
+    const orgPatterns: Record<string, (pkg: string) => string[]> = {
+      vercel: (pkg) => {
+        // Special case mappings for Vercel packages
+        const specialCases: Record<string, string> = {
+          og: 'og-image-generation',
+          analytics: 'analytics',
+          edge: 'functions/edge-functions',
+          'edge-config': 'storage/edge-config',
+        };
+
+        const docPath = specialCases[pkg] || pkg;
+
+        return [
+          `https://vercel.com/docs/${docPath}`,
+          `https://vercel.com/docs/functions/${docPath}`,
+          `https://vercel.com/docs/${pkg}`,
+        ];
+      },
+      aws: (pkg) => [
+        `https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/client/${pkg}/`,
+        `https://docs.aws.amazon.com/sdk-for-javascript/v3/developer-guide/${pkg}.html`,
+      ],
+      azure: (pkg) => [
+        `https://docs.microsoft.com/en-us/javascript/api/${pkg}/`,
+        `https://learn.microsoft.com/en-us/javascript/api/${pkg}/`,
+      ],
+      google: (pkg) => [
+        `https://cloud.google.com/nodejs/docs/reference/${pkg}/latest`,
+        `https://googleapis.dev/nodejs/${pkg}/latest/`,
+      ],
+      cloudflare: (pkg) => [
+        `https://developers.cloudflare.com/${pkg}/`,
+        `https://developers.cloudflare.com/workers/${pkg}/`,
+      ],
+    };
+
+    const patterns = orgPatterns[org];
+    if (!patterns) return null;
+
+    const urlsToTry = patterns(pkgName);
+    const fetch = (await import('node-fetch')).default;
+
+    for (const url of urlsToTry) {
+      try {
+        const response = await fetch(url, {
+          method: 'HEAD',
+          redirect: 'follow',
+          // @ts-expect-error - timeout is valid in node-fetch
+          timeout: 3000,
+        });
+
+        if (response.ok) {
+          console.error(`  🏢 Found docs via organization pattern: ${url}`);
+          return { url, confidence: 'high' };
+        }
+      } catch {
+        continue;
+      }
+    }
+
+    return null;
+  }
+
+  /**
    * Try to find documentation by checking common URL patterns
    */
   private async tryCommonDocPatterns(
@@ -471,7 +548,16 @@ export class PackageScanner {
       }
     }
 
-    // Priority 2: Try common documentation URL patterns
+    // Priority 2: Try organization-specific patterns (for scoped packages)
+    if (!result.docsUrl && packageName.startsWith('@')) {
+      const discovered = await this.tryOrganizationDocs(packageName);
+      if (discovered) {
+        result.docsUrl = discovered.url;
+        result.confidence = discovered.confidence;
+      }
+    }
+
+    // Priority 3: Try common documentation URL patterns
     if (!result.docsUrl) {
       const discovered = await this.tryCommonDocPatterns(
         packageName,
@@ -485,7 +571,7 @@ export class PackageScanner {
       }
     }
 
-    // Priority 3: Analyze homepage content for doc links
+    // Priority 4: Analyze homepage content for doc links
     if (!result.docsUrl && metadata.homepage) {
       const homepage = metadata.homepage.toLowerCase();
       const isRepositoryLink =
@@ -504,13 +590,13 @@ export class PackageScanner {
       }
     }
 
-    // Priority 4: GitHub README (if no better option)
+    // Priority 5: GitHub README (if no better option)
     if (!result.docsUrl && result.githubUrl) {
       result.docsUrl = result.githubUrl;
       result.confidence = 'medium';
     }
 
-    // Priority 5: npm page as last resort
+    // Priority 6: npm page as last resort
     if (!result.docsUrl) {
       result.docsUrl = result.npmUrl;
       result.confidence = 'low';
