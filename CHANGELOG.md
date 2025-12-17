@@ -1,3 +1,9 @@
+# [1.5.0](https://github.com/loganrenz/nardocs/compare/v1.4.0...v1.5.0) (2025-12-17)
+
+### Features
+
+- add organization-based documentation discovery for scoped packages ([2695f66](https://github.com/loganrenz/nardocs/commit/2695f66fcbde73610413ea84e0b547e7023da725))
+
 # [1.4.0](https://github.com/loganrenz/nardocs/compare/v1.3.0...v1.4.0) (2025-12-17)
 
 ### Features
