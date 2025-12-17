@@ -288,4 +288,17 @@ describe('End-to-end: Discover and fetch docs', () => {
     expect(discovery.docsUrl).toBe('https://tanstack.com/query/latest/docs/vue/overview');
     expect(discovery.confidence).toBe('high');
   });
+
+  it('should intelligently discover docs for packages without known overrides', async () => {
+    const scanner = new PackageScanner();
+
+    // Test a package that should use intelligent discovery
+    // (This will try common patterns like /docs, docs subdomain, etc.)
+    const discovery = await scanner.discoverPackage('express');
+
+    // Should find documentation (either from override or intelligent discovery)
+    expect(discovery.docsUrl).toBeTruthy();
+    expect(discovery.docsUrl).not.toBe(discovery.npmUrl); // Should not fall back to npm
+    expect(['high', 'medium']).toContain(discovery.confidence);
+  }, 10000); // 10 second timeout for network requests
 });

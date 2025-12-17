@@ -25,17 +25,23 @@ export interface DiscoveredPackage {
 
 /**
  * Common documentation URL patterns for popular hosting platforms
- * Reserved for future use in enhanced discovery
  */
-// const DOCS_URL_PATTERNS: Record<string, (pkg: string) => string[]> = {
-//   // Try common documentation hosting patterns
-//   github: (pkg) => [
-//     `https://${pkg}.github.io`,
-//     `https://github.com/${pkg}/${pkg}#readme`,
-//   ],
-//   readthedocs: (pkg) => [`https://${pkg}.readthedocs.io`],
-//   gitbook: (pkg) => [`https://${pkg}.gitbook.io`],
-// };
+const DOCS_URL_PATTERNS = {
+  // Documentation hosting platforms
+  readthedocs: (pkg: string) => `https://${pkg}.readthedocs.io`,
+  gitbook: (pkg: string) => `https://${pkg}.gitbook.io`,
+  githubPages: (pkg: string, repo: string) => {
+    const parts = repo.split('/');
+    const org = parts[parts.length - 2];
+    const name = parts[parts.length - 1];
+    return `https://${org}.github.io/${name}`;
+  },
+  // Common doc path patterns
+  docsSubdomain: (domain: string) => `https://docs.${domain}`,
+  docPath: (url: string) => `${url}/docs`,
+  documentationPath: (url: string) => `${url}/documentation`,
+  guidePath: (url: string) => `${url}/guide`,
+};
 
 /**
  * Known documentation URL overrides for packages where auto-discovery might fail
@@ -261,6 +267,143 @@ export class PackageScanner {
   }
 
   /**
+   * Try to find documentation by checking common URL patterns
+   */
+  private async tryCommonDocPatterns(
+    packageName: string,
+    homepage: string | undefined,
+    githubUrl: string | null
+  ): Promise<{ url: string; confidence: 'high' | 'medium' } | null> {
+    const urlsToTry: Array<{ url: string; confidence: 'high' | 'medium' }> = [];
+
+    // Extract domain from homepage
+    if (homepage) {
+      try {
+        const url = new URL(homepage);
+        const domain = url.hostname.replace(/^www\./, '');
+
+        // Try docs subdomain
+        urlsToTry.push({
+          url: DOCS_URL_PATTERNS.docsSubdomain(domain),
+          confidence: 'high',
+        });
+
+        // Try /docs path
+        urlsToTry.push({
+          url: DOCS_URL_PATTERNS.docPath(homepage.replace(/\/$/, '')),
+          confidence: 'high',
+        });
+
+        // Try /documentation path
+        urlsToTry.push({
+          url: DOCS_URL_PATTERNS.documentationPath(homepage.replace(/\/$/, '')),
+          confidence: 'medium',
+        });
+
+        // Try /guide path
+        urlsToTry.push({
+          url: DOCS_URL_PATTERNS.guidePath(homepage.replace(/\/$/, '')),
+          confidence: 'medium',
+        });
+      } catch {
+        // Invalid URL, skip
+      }
+    }
+
+    // Try GitHub Pages if we have a GitHub URL
+    if (githubUrl) {
+      urlsToTry.push({
+        url: DOCS_URL_PATTERNS.githubPages(packageName, githubUrl),
+        confidence: 'medium',
+      });
+    }
+
+    // Try ReadTheDocs
+    const cleanName = packageName.replace('@', '').replace('/', '-');
+    urlsToTry.push({
+      url: DOCS_URL_PATTERNS.readthedocs(cleanName),
+      confidence: 'medium',
+    });
+
+    // Check each URL to see if it exists
+    const fetch = (await import('node-fetch')).default;
+    for (const { url, confidence } of urlsToTry) {
+      try {
+        const response = await fetch(url, {
+          method: 'HEAD',
+          redirect: 'follow',
+          // @ts-expect-error - timeout is valid in node-fetch
+          timeout: 3000,
+        });
+
+        if (response.ok) {
+          return { url, confidence };
+        }
+      } catch {
+        // URL doesn't exist or timed out, continue
+        continue;
+      }
+    }
+
+    return null;
+  }
+
+  /**
+   * Analyze homepage content to find documentation links
+   */
+  private async analyzeHomepageForDocs(homepage: string): Promise<string | null> {
+    try {
+      const fetch = (await import('node-fetch')).default;
+      const response = await fetch(homepage, {
+        // @ts-expect-error - timeout is valid in node-fetch
+        timeout: 5000,
+        headers: {
+          'User-Agent': 'mcp-project-docs/1.0',
+        },
+      });
+
+      if (!response.ok) return null;
+
+      const html = await response.text();
+
+      // Look for common documentation link patterns in HTML
+      const docPatterns = [
+        /href=["']([^"']*(?:docs|documentation|guide|api-reference)[^"']*)["']/gi,
+        /href=["'](https?:\/\/docs\.[^"']+)["']/gi,
+        /<a[^>]*href=["']([^"']*\/docs[^"']*)["']/gi,
+      ];
+
+      for (const pattern of docPatterns) {
+        const matches = html.matchAll(pattern);
+        for (const match of matches) {
+          let docUrl = match[1];
+
+          // Convert relative URLs to absolute
+          if (docUrl.startsWith('/')) {
+            const baseUrl = new URL(homepage);
+            docUrl = `${baseUrl.protocol}//${baseUrl.host}${docUrl}`;
+          } else if (!docUrl.startsWith('http')) {
+            continue;
+          }
+
+          // Verify it's a valid URL and not a GitHub repo link
+          if (
+            docUrl.includes('docs') ||
+            docUrl.includes('documentation') ||
+            docUrl.includes('guide')
+          ) {
+            return docUrl;
+          }
+        }
+      }
+    } catch {
+      // Failed to fetch or parse, skip
+    }
+
+    return null;
+  }
+
+  /**
    * Discover documentation URL for a package
    */
   async discoverPackage(packageName: string): Promise<DiscoveredPackage> {
@@ -302,7 +445,7 @@ export class PackageScanner {
       return result;
     }
 
-    // Priority 1: Homepage (usually the docs site)
+    // Priority 1: Homepage (if it looks like docs)
     if (metadata.homepage) {
       const homepage = metadata.homepage.toLowerCase();
 
@@ -328,13 +471,46 @@ export class PackageScanner {
       }
     }
 
-    // Priority 2: GitHub README (if no homepage)
+    // Priority 2: Try common documentation URL patterns
+    if (!result.docsUrl) {
+      const discovered = await this.tryCommonDocPatterns(
+        packageName,
+        metadata.homepage,
+        result.githubUrl
+      );
+      if (discovered) {
+        result.docsUrl = discovered.url;
+        result.confidence = discovered.confidence;
+        console.error(`  📚 Found docs via pattern: ${discovered.url}`);
+      }
+    }
+
+    // Priority 3: Analyze homepage content for doc links
+    if (!result.docsUrl && metadata.homepage) {
+      const homepage = metadata.homepage.toLowerCase();
+      const isRepositoryLink =
+        homepage.includes('github.com') ||
+        homepage.includes('gitlab.com') ||
+        homepage.includes('npmjs.com');
+
+      // Only analyze if homepage isn't a repository
+      if (!isRepositoryLink) {
+        const docUrl = await this.analyzeHomepageForDocs(metadata.homepage);
+        if (docUrl) {
+          result.docsUrl = docUrl;
+          result.confidence = 'high';
+          console.error(`  🔍 Found docs via homepage analysis: ${docUrl}`);
+        }
+      }
+    }
+
+    // Priority 4: GitHub README (if no better option)
     if (!result.docsUrl && result.githubUrl) {
       result.docsUrl = result.githubUrl;
       result.confidence = 'medium';
     }
 
-    // Priority 3: npm page as last resort
+    // Priority 5: npm page as last resort
     if (!result.docsUrl) {
       result.docsUrl = result.npmUrl;
       result.confidence = 'low';

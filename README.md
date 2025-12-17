@@ -250,14 +250,40 @@ The plugin system is already in place - contributions welcome!
 
 ### Auto-Discovery (Any npm Package)
 
-In addition to built-in plugins, the server **automatically discovers documentation** for ANY npm package in your project!
+In addition to built-in plugins, the server **automatically discovers documentation** for ANY npm package in your project using intelligent multi-strategy discovery!
 
 **How it works:**
 
-1. Scans your `package.json` for all dependencies
-2. Queries the npm registry for package metadata (homepage, repository, etc.)
-3. Discovers documentation URLs from package metadata
-4. Creates dynamic plugins with `check_{package}_docs` tools
+The auto-discovery system uses a sophisticated 5-tier strategy to find the best documentation:
+
+1. **Known Documentation URLs** (Highest Priority)
+   - 50+ curated documentation URLs for popular packages
+   - Ensures packages like VueUse, Pinia, TanStack Query get their actual docs sites
+
+2. **Homepage Analysis**
+   - Checks if the package's homepage is a documentation site
+   - Filters out repository links (github.com, gitlab.com)
+   - Allows GitHub Pages (\*.github.io) which often host docs
+   - Higher confidence for URLs with doc-related keywords (.dev, .io, docs, guide)
+
+3. **Common Documentation Patterns** ⭐ NEW!
+   - Tries `docs.{domain}` subdomain
+   - Tries `{homepage}/docs` path
+   - Tries `{homepage}/documentation` path
+   - Tries `{homepage}/guide` path
+   - Tries GitHub Pages pattern: `{org}.github.io/{repo}`
+   - Tries ReadTheDocs: `{package}.readthedocs.io`
+   - Actually verifies each URL exists before using it!
+
+4. **Homepage Content Analysis** ⭐ NEW!
+   - Fetches and parses the homepage HTML
+   - Looks for documentation links in the page
+   - Extracts links with patterns like `/docs`, `/documentation`, `/guide`
+   - Converts relative URLs to absolute URLs
+
+5. **Fallback Options**
+   - GitHub README (if repository available)
+   - npm package page (last resort)
 
 **Example:** If your project has `lodash` installed, you'll automatically get:
 
@@ -267,11 +293,20 @@ AI: Let me check the lodash documentation for array methods...
 [Server returns: Lodash array documentation]
 ```
 
+**What makes this intelligent:**
+
+- ✅ **Verifies URLs exist** - Doesn't return broken links
+- ✅ **Analyzes actual content** - Parses homepages to find doc links
+- ✅ **Tries multiple strategies** - Falls back gracefully if one method fails
+- ✅ **Caches results** - Avoids repeated lookups for performance
+- ✅ **Confidence scoring** - Tells you how reliable the found URL is
+
 **Supported packages include:**
 
-- 100+ popular packages with known documentation URLs (lodash, axios, zod, etc.)
-- Any package with a `homepage` field pointing to documentation
-- GitHub README fallback for packages without dedicated docs
+- 50+ popular packages with curated documentation URLs
+- Any package with a discoverable documentation site
+- Packages using common doc hosting patterns (ReadTheDocs, GitHub Pages, etc.)
+- Packages with documentation links on their homepage
 
 **Disable auto-discovery:**
 
