@@ -1,3 +1,9 @@
+# [1.1.0](https://github.com/loganrenz/nardocs/compare/v1.0.0...v1.1.0) (2025-12-17)
+
+### Features
+
+- **nuxt:** add comprehensive support for 100+ Nuxt modules ([99fdbb6](https://github.com/loganrenz/nardocs/commit/99fdbb6d9412bbb413e6e42b728d1040f8110d60))
+
 # 1.0.0 (2025-12-17)
 
 ### Bug Fixes
