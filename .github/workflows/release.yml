@@ -68,8 +68,11 @@ jobs:
         run: |
           echo "Configuring npm with Doppler token..."
           NPM_TOKEN=$(doppler secrets get NPM_TOKEN --plain)
-          echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
+          # Write to the npmrc location that actions/setup-node configured
+          echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > $NPM_CONFIG_USERCONFIG
           echo "NPM_TOKEN length: ${#NPM_TOKEN} chars"
+          echo "npmrc location: $NPM_CONFIG_USERCONFIG"
+          cat $NPM_CONFIG_USERCONFIG
           echo "Testing npm auth..."
           npm whoami
 
