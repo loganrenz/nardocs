@@ -1,3 +1,9 @@
+# [1.2.0](https://github.com/loganrenz/nardocs/compare/v1.1.0...v1.2.0) (2025-12-17)
+
+### Features
+
+- add auto-discovery system and remove React stub plugin ([9f8d86d](https://github.com/loganrenz/nardocs/commit/9f8d86d69ad6f6aac0df3f406324dc4205d0a902))
+
 # [1.1.0](https://github.com/loganrenz/nardocs/compare/v1.0.0...v1.1.0) (2025-12-17)
 
 ### Features
