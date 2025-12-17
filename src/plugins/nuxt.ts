@@ -49,9 +49,12 @@ interface NuxtModuleConfig {
 }
 
 /**
- * Registry of supported Nuxt modules
+ * Registry of supported Nuxt modules - COMPREHENSIVE LIST
  */
 const NUXT_MODULES: Record<string, NuxtModuleConfig> = {
+  // ============================================
+  // OFFICIAL @nuxt/* MODULES
+  // ============================================
   image: {
     packages: ['@nuxt/image'],
     docsUrl: 'https://image.nuxt.com',
@@ -83,29 +86,11 @@ const NUXT_MODULES: Record<string, NuxtModuleConfig> = {
     name: 'Nuxt Scripts',
     description: 'Better third-party script management for Nuxt',
   },
-  i18n: {
-    packages: ['@nuxtjs/i18n'],
-    docsUrl: 'https://i18n.nuxtjs.org',
-    name: 'Nuxt i18n',
-    description: 'Internationalization for Nuxt with Vue I18n integration',
-  },
-  colorMode: {
-    packages: ['@nuxtjs/color-mode'],
-    docsUrl: 'https://color-mode.nuxtjs.org',
-    name: 'Nuxt Color Mode',
-    description: 'Dark and light mode with auto detection for Nuxt',
-  },
-  pinia: {
-    packages: ['@pinia/nuxt', 'pinia'],
-    docsUrl: 'https://pinia.vuejs.org/ssr/nuxt.html',
-    name: 'Pinia (Nuxt)',
-    description: 'The intuitive store for Vue.js with Nuxt integration',
-  },
-  vueuse: {
-    packages: ['@vueuse/nuxt', '@vueuse/core'],
-    docsUrl: 'https://vueuse.org',
-    name: 'VueUse',
-    description: 'Collection of essential Vue Composition Utilities',
+  ui: {
+    packages: ['@nuxt/ui', 'nuxt-ui'],
+    docsUrl: 'https://ui.nuxt.com',
+    name: 'Nuxt UI',
+    description: 'Beautiful and accessible UI components built with Tailwind CSS',
   },
   eslint: {
     packages: ['@nuxt/eslint'],
@@ -119,17 +104,33 @@ const NUXT_MODULES: Record<string, NuxtModuleConfig> = {
     name: 'Nuxt Test Utils',
     description: 'Testing utilities for Nuxt applications',
   },
-  auth: {
-    packages: ['nuxt-auth-utils', '@sidebase/nuxt-auth', '@auth/nuxt'],
-    docsUrl: 'https://nuxt.com/modules/auth-utils',
-    name: 'Nuxt Auth',
-    description: 'Authentication utilities for Nuxt',
+  devtools: {
+    packages: ['@nuxt/devtools'],
+    docsUrl: 'https://devtools.nuxt.com',
+    name: 'Nuxt DevTools',
+    description: 'Developer tools for Nuxt with visual debugging',
   },
-  supabase: {
-    packages: ['@nuxtjs/supabase'],
-    docsUrl: 'https://supabase.nuxtjs.org',
-    name: 'Nuxt Supabase',
-    description: 'Supabase integration for Nuxt',
+
+  // ============================================
+  // OFFICIAL @nuxtjs/* MODULES
+  // ============================================
+  i18n: {
+    packages: ['@nuxtjs/i18n'],
+    docsUrl: 'https://i18n.nuxtjs.org',
+    name: 'Nuxt i18n',
+    description: 'Internationalization for Nuxt with Vue I18n integration',
+  },
+  colorMode: {
+    packages: ['@nuxtjs/color-mode'],
+    docsUrl: 'https://color-mode.nuxtjs.org',
+    name: 'Nuxt Color Mode',
+    description: 'Dark and light mode with auto detection for Nuxt',
+  },
+  tailwindcss: {
+    packages: ['@nuxtjs/tailwindcss'],
+    docsUrl: 'https://tailwindcss.nuxtjs.org',
+    name: 'Nuxt Tailwind CSS',
+    description: 'Tailwind CSS integration with PurgeCSS for Nuxt',
   },
   device: {
     packages: ['@nuxtjs/device'],
@@ -149,36 +150,371 @@ const NUXT_MODULES: Record<string, NuxtModuleConfig> = {
     name: 'Nuxt Sitemap',
     description: 'Sitemap generation for Nuxt',
   },
-  ogImage: {
-    packages: ['nuxt-og-image'],
-    docsUrl: 'https://nuxtseo.com/og-image',
-    name: 'Nuxt OG Image',
-    description: 'Generate dynamic Open Graph images for Nuxt',
-  },
   seo: {
     packages: ['@nuxtjs/seo', 'nuxt-seo-kit'],
     docsUrl: 'https://nuxtseo.com',
     name: 'Nuxt SEO',
     description: 'Complete SEO toolkit for Nuxt',
   },
-  security: {
-    packages: ['nuxt-security'],
-    docsUrl: 'https://nuxt-security.vercel.app',
-    name: 'Nuxt Security',
-    description: 'Security module for Nuxt with OWASP best practices',
+  googleFonts: {
+    packages: ['@nuxtjs/google-fonts'],
+    docsUrl: 'https://google-fonts.nuxtjs.org',
+    name: 'Nuxt Google Fonts',
+    description: 'Google Fonts integration with performance optimization',
   },
-  devtools: {
-    packages: ['@nuxt/devtools'],
-    docsUrl: 'https://devtools.nuxt.com',
-    name: 'Nuxt DevTools',
-    description: 'Developer tools for Nuxt with visual debugging',
+  pwa: {
+    packages: ['@vite-pwa/nuxt', '@nuxtjs/pwa'],
+    docsUrl: 'https://vite-pwa-org.netlify.app/frameworks/nuxt',
+    name: 'Nuxt PWA',
+    description: 'Progressive Web App support for Nuxt',
+  },
+  partytown: {
+    packages: ['@nuxtjs/partytown'],
+    docsUrl: 'https://partytown.builder.io',
+    name: 'Nuxt Partytown',
+    description: 'Relocate resource intensive scripts into web workers',
+  },
+  fontaine: {
+    packages: ['@nuxtjs/fontaine'],
+    docsUrl: 'https://nuxt.com/modules/fontaine',
+    name: 'Nuxt Fontaine',
+    description: 'Automatic font fallback based on font metrics',
+  },
+  critters: {
+    packages: ['@nuxtjs/critters'],
+    docsUrl: 'https://nuxt.com/modules/critters',
+    name: 'Nuxt Critters',
+    description: 'Critical CSS inlining for faster page loads',
+  },
+  html: {
+    packages: ['@nuxtjs/html-validator'],
+    docsUrl: 'https://html-validator.nuxtjs.org',
+    name: 'Nuxt HTML Validator',
+    description: 'HTML validation for Nuxt applications',
+  },
+  web3: {
+    packages: ['@nuxtjs/web3'],
+    docsUrl: 'https://nuxt.com/modules/web3',
+    name: 'Nuxt Web3',
+    description: 'Web3 and blockchain integration for Nuxt',
+  },
+  apollo: {
+    packages: ['@nuxtjs/apollo'],
+    docsUrl: 'https://apollo.nuxtjs.org',
+    name: 'Nuxt Apollo',
+    description: 'Apollo GraphQL client integration for Nuxt',
+  },
+  graphql: {
+    packages: ['nuxt-graphql-client', '@nuxtjs/apollo'],
+    docsUrl: 'https://nuxt-graphql-client.web.app',
+    name: 'Nuxt GraphQL Client',
+    description: 'GraphQL client with code generation for Nuxt',
+  },
+
+  // ============================================
+  // AUTHENTICATION MODULES
+  // ============================================
+  auth: {
+    packages: ['nuxt-auth-utils', '@sidebase/nuxt-auth', '@auth/nuxt'],
+    docsUrl: 'https://nuxt.com/modules/auth-utils',
+    name: 'Nuxt Auth Utils',
+    description: 'Authentication utilities for Nuxt',
+  },
+  clerk: {
+    packages: ['vue-clerk', '@clerk/nuxt'],
+    docsUrl: 'https://clerk.com/docs/quickstarts/nuxt',
+    name: 'Clerk Nuxt',
+    description: 'Complete user management and authentication with Clerk',
+  },
+  kinde: {
+    packages: ['@nuxtjs/kinde'],
+    docsUrl: 'https://kinde.com/docs/developer-tools/nuxt-module',
+    name: 'Kinde Nuxt',
+    description: 'Kinde authentication for Nuxt',
+  },
+  logto: {
+    packages: ['@logto/nuxt'],
+    docsUrl: 'https://docs.logto.io/quick-starts/nuxt',
+    name: 'Logto Nuxt',
+    description: 'Logto authentication module for Nuxt',
+  },
+  auth0: {
+    packages: ['@auth0/auth0-vue'],
+    docsUrl: 'https://auth0.com/docs/quickstart/spa/vuejs',
+    name: 'Auth0 Vue',
+    description: 'Auth0 authentication for Vue/Nuxt applications',
+  },
+  hanko: {
+    packages: ['@anthropics/nuxt-hanko', 'nuxt-hanko'],
+    docsUrl: 'https://www.hanko.io/docs/guides/nuxt',
+    name: 'Hanko Nuxt',
+    description: 'Passkey authentication with Hanko',
+  },
+  lucia: {
+    packages: ['lucia', 'lucia-auth'],
+    docsUrl: 'https://lucia-auth.com',
+    name: 'Lucia Auth',
+    description: 'Simple and flexible authentication library',
+  },
+  sidebaseAuth: {
+    packages: ['@sidebase/nuxt-auth'],
+    docsUrl: 'https://sidebase.io/nuxt-auth',
+    name: 'Sidebase Auth',
+    description: 'Authentication module with NextAuth.js support',
+  },
+
+  // ============================================
+  // DATABASE & BACKEND MODULES
+  // ============================================
+  supabase: {
+    packages: ['@nuxtjs/supabase'],
+    docsUrl: 'https://supabase.nuxtjs.org',
+    name: 'Nuxt Supabase',
+    description: 'Supabase integration for Nuxt',
+  },
+  prisma: {
+    packages: ['@prisma/nuxt', '@prisma/client'],
+    docsUrl:
+      'https://www.prisma.io/docs/orm/more/help-and-troubleshooting/help-articles/nuxt-prisma-module',
+    name: 'Prisma Nuxt',
+    description: 'Prisma ORM integration for Nuxt',
+  },
+  drizzle: {
+    packages: ['drizzle-orm', 'nuxt-drizzle'],
+    docsUrl: 'https://orm.drizzle.team',
+    name: 'Drizzle ORM',
+    description: 'TypeScript ORM with SQL-like syntax',
+  },
+  firebase: {
+    packages: ['nuxt-vuefire', 'vuefire'],
+    docsUrl: 'https://vuefire.vuejs.org/nuxt/getting-started.html',
+    name: 'VueFire Nuxt',
+    description: 'Firebase integration for Nuxt with VueFire',
+  },
+  mongoose: {
+    packages: ['nuxt-mongoose'],
+    docsUrl: 'https://nuxt.com/modules/nuxt-mongoose',
+    name: 'Nuxt Mongoose',
+    description: 'MongoDB integration with Mongoose for Nuxt',
   },
   hub: {
     packages: ['@nuxthub/core', 'nuxthub'],
     docsUrl: 'https://hub.nuxt.com/docs',
     name: 'NuxtHub',
-    description: 'Full-stack Nuxt hosting and deployment platform',
+    description: 'Full-stack Nuxt hosting and deployment platform with D1, KV, R2',
   },
+  turso: {
+    packages: ['@nuxt/turso', 'nuxt-turso'],
+    docsUrl: 'https://nuxt.com/modules/turso',
+    name: 'Nuxt Turso',
+    description: 'Turso (LibSQL) database integration for Nuxt',
+  },
+  planetscale: {
+    packages: ['@planetscale/database'],
+    docsUrl: 'https://planetscale.com/docs',
+    name: 'PlanetScale',
+    description: 'PlanetScale serverless MySQL database',
+  },
+  neon: {
+    packages: ['@neondatabase/serverless'],
+    docsUrl: 'https://neon.tech/docs',
+    name: 'Neon Database',
+    description: 'Neon serverless Postgres database',
+  },
+
+  // ============================================
+  // CMS INTEGRATIONS
+  // ============================================
+  strapi: {
+    packages: ['@nuxtjs/strapi'],
+    docsUrl: 'https://strapi.nuxtjs.org',
+    name: 'Nuxt Strapi',
+    description: 'Strapi headless CMS integration for Nuxt',
+  },
+  sanity: {
+    packages: ['@nuxtjs/sanity'],
+    docsUrl: 'https://sanity.nuxtjs.org',
+    name: 'Nuxt Sanity',
+    description: 'Sanity.io headless CMS integration for Nuxt',
+  },
+  storyblok: {
+    packages: ['@storyblok/nuxt'],
+    docsUrl: 'https://github.com/storyblok/storyblok-nuxt',
+    name: 'Storyblok Nuxt',
+    description: 'Storyblok headless CMS integration for Nuxt',
+  },
+  directus: {
+    packages: ['nuxt-directus'],
+    docsUrl: 'https://nuxt.com/modules/directus',
+    name: 'Nuxt Directus',
+    description: 'Directus headless CMS integration for Nuxt',
+  },
+  contentful: {
+    packages: ['contentful'],
+    docsUrl: 'https://www.contentful.com/developers/docs/javascript/',
+    name: 'Contentful',
+    description: 'Contentful headless CMS for Nuxt',
+  },
+  prismic: {
+    packages: ['@nuxtjs/prismic'],
+    docsUrl: 'https://prismic.nuxtjs.org',
+    name: 'Nuxt Prismic',
+    description: 'Prismic headless CMS integration for Nuxt',
+  },
+  wordpress: {
+    packages: ['nuxt-wp', '@nuxtjs/wordpress'],
+    docsUrl: 'https://nuxt.com/modules/wp-nuxt',
+    name: 'Nuxt WordPress',
+    description: 'WordPress REST API integration for Nuxt',
+  },
+  payload: {
+    packages: ['payload', '@payloadcms/nuxt'],
+    docsUrl: 'https://payloadcms.com/docs',
+    name: 'Payload CMS',
+    description: 'Payload headless CMS integration',
+  },
+  keystatic: {
+    packages: ['@keystatic/core', '@keystatic/nuxt'],
+    docsUrl: 'https://keystatic.com/docs',
+    name: 'Keystatic',
+    description: 'Git-based CMS for Nuxt',
+  },
+  tina: {
+    packages: ['tinacms', '@tinacms/cli'],
+    docsUrl: 'https://tina.io/docs',
+    name: 'TinaCMS',
+    description: 'Git-backed headless CMS',
+  },
+
+  // ============================================
+  // ANALYTICS & MONITORING
+  // ============================================
+  plausible: {
+    packages: ['@nuxtjs/plausible', 'vue-plausible'],
+    docsUrl: 'https://nuxt.com/modules/plausible',
+    name: 'Nuxt Plausible',
+    description: 'Plausible Analytics integration (privacy-friendly)',
+  },
+  gtag: {
+    packages: ['nuxt-gtag', '@nuxtjs/google-analytics'],
+    docsUrl: 'https://nuxt.com/modules/gtag',
+    name: 'Nuxt Google Analytics',
+    description: 'Google Analytics 4 integration for Nuxt',
+  },
+  posthog: {
+    packages: ['nuxt-posthog', 'posthog-js'],
+    docsUrl: 'https://posthog.com/docs/libraries/nuxt-js',
+    name: 'PostHog Nuxt',
+    description: 'PostHog product analytics for Nuxt',
+  },
+  sentry: {
+    packages: ['@sentry/nuxt', '@nuxtjs/sentry'],
+    docsUrl: 'https://docs.sentry.io/platforms/javascript/guides/nuxt/',
+    name: 'Sentry Nuxt',
+    description: 'Sentry error tracking and performance monitoring',
+  },
+  clarity: {
+    packages: ['nuxt-clarity-analytics'],
+    docsUrl: 'https://nuxt.com/modules/clarity-analytics',
+    name: 'Microsoft Clarity',
+    description: 'Microsoft Clarity analytics for Nuxt',
+  },
+  umami: {
+    packages: ['nuxt-umami'],
+    docsUrl: 'https://nuxt.com/modules/umami',
+    name: 'Umami Analytics',
+    description: 'Umami self-hosted analytics for Nuxt',
+  },
+  fathom: {
+    packages: ['nuxt-fathom', '@funken-studio/nuxt-fathom'],
+    docsUrl: 'https://nuxt.com/modules/fathom',
+    name: 'Fathom Analytics',
+    description: 'Privacy-focused Fathom analytics',
+  },
+  mixpanel: {
+    packages: ['nuxt-mixpanel'],
+    docsUrl: 'https://nuxt.com/modules/mixpanel',
+    name: 'Mixpanel Nuxt',
+    description: 'Mixpanel product analytics',
+  },
+  segment: {
+    packages: ['nuxt-segment', '@segment/analytics-next'],
+    docsUrl: 'https://segment.com/docs',
+    name: 'Segment Analytics',
+    description: 'Segment customer data platform',
+  },
+  hotjar: {
+    packages: ['nuxt-hotjar'],
+    docsUrl: 'https://nuxt.com/modules/hotjar',
+    name: 'Hotjar',
+    description: 'Hotjar heatmaps and session recordings',
+  },
+
+  // ============================================
+  // PAYMENT & E-COMMERCE
+  // ============================================
+  stripe: {
+    packages: ['@unlok-co/nuxt-stripe', 'nuxt-stripe'],
+    docsUrl: 'https://nuxt.com/modules/stripe',
+    name: 'Nuxt Stripe',
+    description: 'Stripe payment integration for Nuxt',
+  },
+  lemonSqueezy: {
+    packages: ['@lemonsqueezy/wedges-vue', 'nuxt-lemonsqueezy'],
+    docsUrl: 'https://docs.lemonsqueezy.com',
+    name: 'LemonSqueezy',
+    description: 'LemonSqueezy payment platform integration',
+  },
+  shopify: {
+    packages: ['@shopify/hydrogen-vue', 'nuxt-shopify'],
+    docsUrl: 'https://nuxt.com/modules/shopify',
+    name: 'Nuxt Shopify',
+    description: 'Shopify Storefront API integration',
+  },
+  medusa: {
+    packages: ['nuxt-medusa', '@medusajs/medusa-js'],
+    docsUrl: 'https://nuxt.com/modules/medusa',
+    name: 'Nuxt Medusa',
+    description: 'Medusa e-commerce integration',
+  },
+  snipcart: {
+    packages: ['@nuxtjs/snipcart'],
+    docsUrl: 'https://nuxt.com/modules/snipcart',
+    name: 'Snipcart',
+    description: 'Snipcart shopping cart integration',
+  },
+  paddle: {
+    packages: ['nuxt-paddle', '@paddle/paddle-js'],
+    docsUrl: 'https://developer.paddle.com',
+    name: 'Paddle',
+    description: 'Paddle payments and subscriptions',
+  },
+
+  // ============================================
+  // STATE MANAGEMENT
+  // ============================================
+  pinia: {
+    packages: ['@pinia/nuxt', 'pinia'],
+    docsUrl: 'https://pinia.vuejs.org/ssr/nuxt.html',
+    name: 'Pinia (Nuxt)',
+    description: 'The intuitive store for Vue.js with Nuxt integration',
+  },
+  piniaPersistedstate: {
+    packages: ['pinia-plugin-persistedstate', '@pinia-plugin-persistedstate/nuxt'],
+    docsUrl: 'https://prazdevs.github.io/pinia-plugin-persistedstate/frameworks/nuxt-3.html',
+    name: 'Pinia Persisted State',
+    description: 'Persist Pinia stores across sessions',
+  },
+  vueuse: {
+    packages: ['@vueuse/nuxt', '@vueuse/core'],
+    docsUrl: 'https://vueuse.org',
+    name: 'VueUse',
+    description: 'Collection of essential Vue Composition Utilities',
+  },
+
+  // ============================================
+  // UI COMPONENT LIBRARIES
+  // ============================================
   primevue: {
     packages: ['@primevue/nuxt-module', 'nuxt-primevue'],
     docsUrl: 'https://primevue.org/nuxt',
@@ -190,6 +526,342 @@ const NUXT_MODULES: Record<string, NuxtModuleConfig> = {
     docsUrl: 'https://www.shadcn-vue.com/docs/installation/nuxt',
     name: 'shadcn-vue Nuxt',
     description: 'Beautifully designed components built with Radix Vue and Tailwind',
+  },
+  vuetify: {
+    packages: ['vuetify-nuxt-module', 'vuetify'],
+    docsUrl: 'https://vuetifyjs.com/en/getting-started/installation/#nuxt-install',
+    name: 'Vuetify Nuxt',
+    description: 'Material Design component framework for Nuxt',
+  },
+  quasar: {
+    packages: ['nuxt-quasar-ui', 'quasar'],
+    docsUrl: 'https://quasar.dev',
+    name: 'Quasar Nuxt',
+    description: 'Quasar Framework UI components',
+  },
+  element: {
+    packages: ['@element-plus/nuxt', 'element-plus'],
+    docsUrl: 'https://element-plus.org/en-US/guide/quickstart.html#nuxt',
+    name: 'Element Plus Nuxt',
+    description: 'Element Plus UI components for Nuxt',
+  },
+  naive: {
+    packages: ['@bg-dev/nuxt-naiveui', 'naive-ui'],
+    docsUrl: 'https://www.naiveui.com',
+    name: 'Naive UI Nuxt',
+    description: 'Naive UI components for Nuxt',
+  },
+  antDesign: {
+    packages: ['@ant-design-vue/nuxt', 'ant-design-vue'],
+    docsUrl: 'https://antdv.com/docs/vue/introduce',
+    name: 'Ant Design Vue Nuxt',
+    description: 'Ant Design UI components for Nuxt',
+  },
+  headlessui: {
+    packages: ['@headlessui/vue', 'nuxt-headlessui'],
+    docsUrl: 'https://headlessui.com',
+    name: 'Headless UI',
+    description: 'Unstyled, accessible UI components',
+  },
+  radix: {
+    packages: ['radix-vue'],
+    docsUrl: 'https://www.radix-vue.com',
+    name: 'Radix Vue',
+    description: 'Unstyled, accessible components for Vue',
+  },
+  anu: {
+    packages: ['anu-vue', '@anu-vue/nuxt'],
+    docsUrl: 'https://anu-vue.netlify.app',
+    name: 'Anu Vue',
+    description: 'DX focused utility based Vue component library',
+  },
+  daisyui: {
+    packages: ['daisyui'],
+    docsUrl: 'https://daisyui.com',
+    name: 'DaisyUI',
+    description: 'Tailwind CSS component library',
+  },
+  flowbite: {
+    packages: ['flowbite', 'flowbite-vue'],
+    docsUrl: 'https://flowbite.com/docs/getting-started/nuxt-js/',
+    name: 'Flowbite Vue',
+    description: 'Tailwind CSS components built with Flowbite',
+  },
+
+  // ============================================
+  // SEO & PERFORMANCE
+  // ============================================
+  ogImage: {
+    packages: ['nuxt-og-image'],
+    docsUrl: 'https://nuxtseo.com/og-image',
+    name: 'Nuxt OG Image',
+    description: 'Generate dynamic Open Graph images for Nuxt',
+  },
+  schemaOrg: {
+    packages: ['nuxt-schema-org'],
+    docsUrl: 'https://nuxtseo.com/schema-org',
+    name: 'Nuxt Schema.org',
+    description: 'Schema.org structured data for Nuxt',
+  },
+  linkChecker: {
+    packages: ['nuxt-link-checker'],
+    docsUrl: 'https://nuxtseo.com/link-checker',
+    name: 'Nuxt Link Checker',
+    description: 'Find and fix broken links in Nuxt',
+  },
+  siteConfig: {
+    packages: ['nuxt-site-config'],
+    docsUrl: 'https://nuxtseo.com/site-config',
+    name: 'Nuxt Site Config',
+    description: 'Site configuration management for Nuxt',
+  },
+  security: {
+    packages: ['nuxt-security'],
+    docsUrl: 'https://nuxt-security.vercel.app',
+    name: 'Nuxt Security',
+    description: 'Security module for Nuxt with OWASP best practices',
+  },
+  delay: {
+    packages: ['nuxt-delay-hydration'],
+    docsUrl: 'https://nuxt.com/modules/delay-hydration',
+    name: 'Nuxt Delay Hydration',
+    description: 'Delay hydration for better performance scores',
+  },
+  speedkit: {
+    packages: ['nuxt-speedkit'],
+    docsUrl: 'https://nuxt.com/modules/speedkit',
+    name: 'Nuxt Speedkit',
+    description: 'Performance optimization toolkit',
+  },
+
+  // ============================================
+  // ANIMATION & MOTION
+  // ============================================
+  motion: {
+    packages: ['@vueuse/motion'],
+    docsUrl: 'https://motion.vueuse.org',
+    name: 'VueUse Motion',
+    description: 'Animation library for Vue with composables',
+  },
+  gsap: {
+    packages: ['@gsap/nuxt', 'gsap'],
+    docsUrl: 'https://gsap.com/docs/v3/',
+    name: 'GSAP Nuxt',
+    description: 'GreenSock Animation Platform for Nuxt',
+  },
+  lottie: {
+    packages: ['vue3-lottie', 'nuxt-lottie'],
+    docsUrl: 'https://nuxt.com/modules/lottie',
+    name: 'Nuxt Lottie',
+    description: 'Lottie animations for Nuxt',
+  },
+  aos: {
+    packages: ['nuxt-aos', 'aos'],
+    docsUrl: 'https://nuxt.com/modules/aos',
+    name: 'Nuxt AOS',
+    description: 'Animate On Scroll library for Nuxt',
+  },
+
+  // ============================================
+  // FORMS & VALIDATION
+  // ============================================
+  veeValidate: {
+    packages: ['vee-validate', '@vee-validate/nuxt'],
+    docsUrl: 'https://vee-validate.logaretm.com/v4/',
+    name: 'VeeValidate',
+    description: 'Form validation for Vue with Nuxt integration',
+  },
+  formkit: {
+    packages: ['@formkit/nuxt', '@formkit/vue'],
+    docsUrl: 'https://formkit.com/getting-started/installation#nuxt',
+    name: 'FormKit',
+    description: 'Form building framework for Vue/Nuxt',
+  },
+  zod: {
+    packages: ['zod', '@vee-validate/zod'],
+    docsUrl: 'https://zod.dev',
+    name: 'Zod',
+    description: 'TypeScript-first schema validation',
+  },
+
+  // ============================================
+  // UTILITIES & MISC
+  // ============================================
+  dayjs: {
+    packages: ['dayjs-nuxt', 'dayjs'],
+    docsUrl: 'https://nuxt.com/modules/dayjs',
+    name: 'Nuxt Day.js',
+    description: 'Day.js date library integration',
+  },
+  lodash: {
+    packages: ['nuxt-lodash'],
+    docsUrl: 'https://nuxt.com/modules/lodash',
+    name: 'Nuxt Lodash',
+    description: 'Lodash utility library integration',
+  },
+  time: {
+    packages: ['@nuxtjs/date-fns', 'date-fns'],
+    docsUrl: 'https://date-fns.org',
+    name: 'Date-fns',
+    description: 'Modern JavaScript date utility library',
+  },
+  markdown: {
+    packages: ['nuxt-markdown', '@nuxtjs/markdownit'],
+    docsUrl: 'https://nuxt.com/modules/mdc',
+    name: 'Nuxt Markdown',
+    description: 'Markdown rendering for Nuxt',
+  },
+  mdc: {
+    packages: ['@nuxtjs/mdc'],
+    docsUrl: 'https://nuxt.com/modules/mdc',
+    name: 'Nuxt MDC',
+    description: 'Markdown Components for Nuxt',
+  },
+  svgo: {
+    packages: ['nuxt-svgo'],
+    docsUrl: 'https://nuxt.com/modules/svgo',
+    name: 'Nuxt SVGO',
+    description: 'SVG optimization and component usage',
+  },
+  pdf: {
+    packages: ['@pdfme/nuxt', 'vue-pdf-embed'],
+    docsUrl: 'https://nuxt.com/modules/pdfme',
+    name: 'Nuxt PDF',
+    description: 'PDF generation and rendering',
+  },
+  qrcode: {
+    packages: ['nuxt-qrcode'],
+    docsUrl: 'https://nuxt.com/modules/qrcode',
+    name: 'Nuxt QR Code',
+    description: 'QR code generation for Nuxt',
+  },
+  turnstile: {
+    packages: ['@nuxtjs/turnstile', 'nuxt-turnstile'],
+    docsUrl: 'https://nuxt.com/modules/turnstile',
+    name: 'Nuxt Turnstile',
+    description: 'Cloudflare Turnstile CAPTCHA integration',
+  },
+  recaptcha: {
+    packages: ['@nuxtjs/recaptcha', 'nuxt-recaptcha'],
+    docsUrl: 'https://nuxt.com/modules/recaptcha',
+    name: 'Nuxt reCAPTCHA',
+    description: 'Google reCAPTCHA integration',
+  },
+
+  // ============================================
+  // EMAIL & NOTIFICATIONS
+  // ============================================
+  resend: {
+    packages: ['nuxt-resend', 'resend'],
+    docsUrl: 'https://resend.com/docs',
+    name: 'Resend',
+    description: 'Email API for developers',
+  },
+  nodemailer: {
+    packages: ['nodemailer', 'nuxt-nodemailer'],
+    docsUrl: 'https://nodemailer.com',
+    name: 'Nodemailer',
+    description: 'Email sending with Nodemailer',
+  },
+  vueEmail: {
+    packages: ['vue-email', '@vue-email/nuxt'],
+    docsUrl: 'https://vuemail.net',
+    name: 'Vue Email',
+    description: 'Build emails with Vue components',
+  },
+  pusher: {
+    packages: ['nuxt-pusher', 'pusher-js'],
+    docsUrl: 'https://pusher.com/docs',
+    name: 'Pusher',
+    description: 'Real-time notifications with Pusher',
+  },
+
+  // ============================================
+  // MAPS & LOCATION
+  // ============================================
+  leaflet: {
+    packages: ['@nuxtjs/leaflet', 'nuxt-leaflet'],
+    docsUrl: 'https://nuxt.com/modules/leaflet',
+    name: 'Nuxt Leaflet',
+    description: 'Leaflet maps integration for Nuxt',
+  },
+  mapbox: {
+    packages: ['nuxt-mapbox', 'mapbox-gl'],
+    docsUrl: 'https://nuxt.com/modules/mapbox',
+    name: 'Nuxt Mapbox',
+    description: 'Mapbox GL maps for Nuxt',
+  },
+  googleMaps: {
+    packages: ['@nuxtjs/google-maps', 'nuxt-google-maps'],
+    docsUrl: 'https://nuxt.com/modules/google-maps',
+    name: 'Nuxt Google Maps',
+    description: 'Google Maps integration for Nuxt',
+  },
+
+  // ============================================
+  // MEDIA & FILES
+  // ============================================
+  cloudinary: {
+    packages: ['@nuxtjs/cloudinary', 'nuxt-cloudinary'],
+    docsUrl: 'https://cloudinary.nuxtjs.org',
+    name: 'Nuxt Cloudinary',
+    description: 'Cloudinary media management for Nuxt',
+  },
+  uploadthing: {
+    packages: ['nuxt-uploadthing', 'uploadthing'],
+    docsUrl: 'https://docs.uploadthing.com',
+    name: 'UploadThing',
+    description: 'File uploads made easy',
+  },
+  mux: {
+    packages: ['nuxt-mux', '@mux/mux-player'],
+    docsUrl: 'https://nuxt.com/modules/mux',
+    name: 'Nuxt Mux',
+    description: 'Mux video streaming for Nuxt',
+  },
+
+  // ============================================
+  // TESTING
+  // ============================================
+  vitest: {
+    packages: ['@nuxt/test-utils', 'vitest'],
+    docsUrl: 'https://nuxt.com/docs/getting-started/testing',
+    name: 'Nuxt Vitest',
+    description: 'Vitest testing for Nuxt',
+  },
+  storybook: {
+    packages: ['@nuxtjs/storybook', '@storybook/vue3'],
+    docsUrl: 'https://storybook.nuxtjs.org',
+    name: 'Nuxt Storybook',
+    description: 'Storybook integration for Nuxt',
+  },
+  histoire: {
+    packages: ['@histoire/plugin-nuxt', 'histoire'],
+    docsUrl: 'https://histoire.dev',
+    name: 'Histoire',
+    description: 'Story-driven component development',
+  },
+
+  // ============================================
+  // DEPLOYMENT & HOSTING
+  // ============================================
+  vercel: {
+    packages: ['@vercel/analytics', 'nuxt-vercel-analytics'],
+    docsUrl: 'https://vercel.com/docs/frameworks/nuxt',
+    name: 'Vercel',
+    description: 'Vercel deployment and analytics',
+  },
+  netlify: {
+    packages: ['@netlify/functions', 'nuxt-netlify'],
+    docsUrl: 'https://docs.netlify.com/frameworks/nuxt/',
+    name: 'Netlify',
+    description: 'Netlify deployment integration',
+  },
+  cloudflare: {
+    packages: ['wrangler', 'nitro-cloudflare-dev'],
+    docsUrl: 'https://developers.cloudflare.com/pages/framework-guides/nuxt/',
+    name: 'Cloudflare Pages',
+    description: 'Cloudflare Pages deployment',
   },
 };
 
@@ -254,14 +926,14 @@ export class NuxtPlugin implements Plugin {
       {
         name: 'check_nuxt_module',
         description:
-          'Fetch documentation for a Nuxt module. Use this when working with Nuxt modules like @nuxt/image, @nuxt/content, @nuxtjs/i18n, @nuxtjs/color-mode, Pinia, VueUse, or any other Nuxt ecosystem module.',
+          'Fetch documentation for any Nuxt module. Supports 100+ modules including official @nuxt/* modules, @nuxtjs/* modules, UI libraries, CMS integrations, authentication, databases, analytics, payments, and more.',
         inputSchema: {
           type: 'object',
           properties: {
             module: {
               type: 'string',
               description:
-                'The module name (e.g., "image", "content", "fonts", "icon", "scripts", "i18n", "color-mode", "pinia", "vueuse", "eslint", "auth", "supabase", "device", "robots", "sitemap", "og-image", "seo", "security", "devtools", "hub", "primevue", "shadcn")',
+                'The module name. Examples: Official: "image", "content", "fonts", "icon", "scripts", "ui", "devtools", "eslint". Nuxtjs: "i18n", "color-mode", "tailwindcss", "pwa", "apollo". Auth: "auth", "clerk", "kinde", "auth0", "lucia". DB: "supabase", "prisma", "drizzle", "firebase", "mongoose". CMS: "strapi", "sanity", "storyblok", "directus", "prismic". Analytics: "plausible", "gtag", "posthog", "sentry". UI: "primevue", "shadcn", "vuetify", "quasar", "element", "naive", "headlessui". Payment: "stripe", "lemonsqueezy", "shopify". State: "pinia", "vueuse". SEO: "robots", "sitemap", "og-image", "schema-org". And many more!',
             },
             path: {
               type: 'string',
@@ -489,8 +1161,9 @@ export class NuxtPlugin implements Plugin {
 
   private async checkNuxtModule(module: string, path?: string): Promise<string> {
     // Normalize module name
-    const moduleKey = module.toLowerCase().replace(/-/g, '');
+    const moduleKey = module.toLowerCase().replace(/-/g, '').replace(/_/g, '');
     const normalizedKeys: Record<string, string> = {
+      // Official @nuxt/* modules
       image: 'image',
       nuxtimage: 'image',
       content: 'content',
@@ -501,30 +1174,187 @@ export class NuxtPlugin implements Plugin {
       nuxticon: 'icon',
       scripts: 'scripts',
       nuxtscripts: 'scripts',
-      i18n: 'i18n',
-      colormode: 'colorMode',
-      'color-mode': 'colorMode',
-      pinia: 'pinia',
-      vueuse: 'vueuse',
+      ui: 'ui',
+      nuxtui: 'ui',
       eslint: 'eslint',
       nuxteslint: 'eslint',
       testutils: 'testUtils',
-      'test-utils': 'testUtils',
-      auth: 'auth',
-      nuxtauth: 'auth',
-      supabase: 'supabase',
+      devtools: 'devtools',
+      nuxtdevtools: 'devtools',
+
+      // Official @nuxtjs/* modules
+      i18n: 'i18n',
+      nuxti18n: 'i18n',
+      colormode: 'colorMode',
+      tailwindcss: 'tailwindcss',
+      tailwind: 'tailwindcss',
       device: 'device',
       robots: 'robots',
       sitemap: 'sitemap',
-      ogimage: 'ogImage',
-      'og-image': 'ogImage',
       seo: 'seo',
-      security: 'security',
-      devtools: 'devtools',
+      googlefonts: 'googleFonts',
+      pwa: 'pwa',
+      partytown: 'partytown',
+      fontaine: 'fontaine',
+      critters: 'critters',
+      htmlvalidator: 'html',
+      web3: 'web3',
+      apollo: 'apollo',
+      graphql: 'graphql',
+      graphqlclient: 'graphql',
+
+      // Authentication
+      auth: 'auth',
+      nuxtauth: 'auth',
+      authutils: 'auth',
+      clerk: 'clerk',
+      kinde: 'kinde',
+      logto: 'logto',
+      auth0: 'auth0',
+      hanko: 'hanko',
+      lucia: 'lucia',
+      luciaauth: 'lucia',
+      sidebaseauth: 'sidebaseAuth',
+
+      // Database & Backend
+      supabase: 'supabase',
+      prisma: 'prisma',
+      drizzle: 'drizzle',
+      drizzleorm: 'drizzle',
+      firebase: 'firebase',
+      vuefire: 'firebase',
+      mongoose: 'mongoose',
+      mongodb: 'mongoose',
       hub: 'hub',
       nuxthub: 'hub',
+      turso: 'turso',
+      planetscale: 'planetscale',
+      neon: 'neon',
+      neondb: 'neon',
+
+      // CMS
+      strapi: 'strapi',
+      sanity: 'sanity',
+      storyblok: 'storyblok',
+      directus: 'directus',
+      contentful: 'contentful',
+      prismic: 'prismic',
+      wordpress: 'wordpress',
+      wp: 'wordpress',
+      payload: 'payload',
+      payloadcms: 'payload',
+      keystatic: 'keystatic',
+      tina: 'tina',
+      tinacms: 'tina',
+
+      // Analytics
+      plausible: 'plausible',
+      gtag: 'gtag',
+      googleanalytics: 'gtag',
+      ga: 'gtag',
+      posthog: 'posthog',
+      sentry: 'sentry',
+      clarity: 'clarity',
+      umami: 'umami',
+      fathom: 'fathom',
+      mixpanel: 'mixpanel',
+      segment: 'segment',
+      hotjar: 'hotjar',
+
+      // Payment
+      stripe: 'stripe',
+      lemonsqueezy: 'lemonSqueezy',
+      shopify: 'shopify',
+      medusa: 'medusa',
+      snipcart: 'snipcart',
+      paddle: 'paddle',
+
+      // State Management
+      pinia: 'pinia',
+      piniapersistedstate: 'piniaPersistedstate',
+      vueuse: 'vueuse',
+
+      // UI Libraries
       primevue: 'primevue',
       shadcn: 'shadcn',
+      shadcnvue: 'shadcn',
+      vuetify: 'vuetify',
+      quasar: 'quasar',
+      element: 'element',
+      elementplus: 'element',
+      naive: 'naive',
+      naiveui: 'naive',
+      antdesign: 'antDesign',
+      antdesignvue: 'antDesign',
+      headlessui: 'headlessui',
+      radix: 'radix',
+      radixvue: 'radix',
+      anu: 'anu',
+      anuvue: 'anu',
+      daisyui: 'daisyui',
+      daisy: 'daisyui',
+      flowbite: 'flowbite',
+
+      // SEO & Performance
+      ogimage: 'ogImage',
+      schemaorg: 'schemaOrg',
+      linkchecker: 'linkChecker',
+      siteconfig: 'siteConfig',
+      security: 'security',
+      nuxtsecurity: 'security',
+      delayhydration: 'delay',
+      speedkit: 'speedkit',
+
+      // Animation
+      motion: 'motion',
+      vuemotion: 'motion',
+      gsap: 'gsap',
+      lottie: 'lottie',
+      aos: 'aos',
+
+      // Forms
+      veevalidate: 'veeValidate',
+      formkit: 'formkit',
+      zod: 'zod',
+
+      // Utilities
+      dayjs: 'dayjs',
+      lodash: 'lodash',
+      datefns: 'time',
+      markdown: 'markdown',
+      mdc: 'mdc',
+      svgo: 'svgo',
+      pdf: 'pdf',
+      qrcode: 'qrcode',
+      turnstile: 'turnstile',
+      recaptcha: 'recaptcha',
+
+      // Email
+      resend: 'resend',
+      nodemailer: 'nodemailer',
+      vueemail: 'vueEmail',
+      pusher: 'pusher',
+
+      // Maps
+      leaflet: 'leaflet',
+      mapbox: 'mapbox',
+      googlemaps: 'googleMaps',
+
+      // Media
+      cloudinary: 'cloudinary',
+      uploadthing: 'uploadthing',
+      mux: 'mux',
+
+      // Testing
+      vitest: 'vitest',
+      storybook: 'storybook',
+      histoire: 'histoire',
+
+      // Deployment
+      vercel: 'vercel',
+      netlify: 'netlify',
+      cloudflare: 'cloudflare',
+      cloudflarepages: 'cloudflare',
     };
 
     const resolvedKey = normalizedKeys[moduleKey] || moduleKey;
