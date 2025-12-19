@@ -1,3 +1,9 @@
+# [1.6.0](https://github.com/loganrenz/nardocs/compare/v1.5.0...v1.6.0) (2025-12-19)
+
+### Features
+
+- add support for custom documentation via config file ([90e95d1](https://github.com/loganrenz/nardocs/commit/90e95d1f8b9e84f7a1ee53e00fae1e52a654c9b7))
+
 # [1.5.0](https://github.com/loganrenz/nardocs/compare/v1.4.0...v1.5.0) (2025-12-17)
 
 ### Features
