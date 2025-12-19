@@ -1,0 +1,11 @@
+{
+  "packages": [
+    {
+      "name": "@apple/mapkit-js",
+      "docsUrl": "https://developer.apple.com/documentation/mapkitjs",
+      "description": "Apple MapKit JS - Interactive maps for web applications",
+      "version": "latest"
+    }
+  ]
+}
+

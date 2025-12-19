@@ -23,7 +23,7 @@ import { AstroPlugin } from './plugins/astro.js';
 import { SolidPlugin } from './plugins/solid.js';
 import { RemixPlugin } from './plugins/remix.js';
 import type { Plugin } from './plugins/nuxt.js';
-import { PackageScanner, createDynamicPlugin } from './discovery/index.js';
+import { PackageScanner, createDynamicPlugin, type DiscoveredPackage } from './discovery/index.js';
 
 /**
  * Project information loaded from package.json
@@ -33,6 +33,18 @@ interface ProjectInfo {
   version: string;
   dependencies: Record<string, string>;
   devDependencies: Record<string, string>;
+}
+
+/**
+ * Configuration file format for custom documentation
+ */
+interface CustomDocsConfig {
+  packages?: Array<{
+    name: string;
+    docsUrl: string;
+    description?: string;
+    version?: string;
+  }>;
 }
 
 /**
@@ -134,12 +146,8 @@ class ProjectDocsServer {
       }
     );
 
-    // Get project path from environment or current working directory
-    // When installed as a dev dependency and run via npx, process.cwd()
-    // will be the consuming project's directory (where package.json is)
+    // Get project path from environment
     this.projectPath = process.env.PROJECT_PATH || process.cwd();
-
-    console.error(`Project path: ${this.projectPath}`);
 
     // Check if auto-discovery is enabled (default: true)
     this.autoDiscoveryEnabled = process.env.AUTO_DISCOVERY !== 'false';
@@ -148,6 +156,49 @@ class ProjectDocsServer {
   }
 
   private autoDiscoveryEnabled: boolean;
+
+  /**
+   * Load custom documentation configuration from .mcp-project-docs.json or mcp-project-docs.json
+   */
+  private async loadCustomDocsConfig(): Promise<CustomDocsConfig> {
+    const configPaths = [
+      path.join(this.projectPath, '.mcp-project-docs.json'),
+      path.join(this.projectPath, 'mcp-project-docs.json'),
+    ];
+
+    for (const configPath of configPaths) {
+      try {
+        const content = await fs.readFile(configPath, 'utf-8');
+        const config = JSON.parse(content) as CustomDocsConfig;
+        console.error(`Loaded custom docs config from ${path.basename(configPath)}`);
+        return config;
+      } catch (error) {
+        // File doesn't exist or invalid JSON, continue to next path
+        if ((error as NodeJS.ErrnoException).code !== 'ENOENT') {
+          console.error(`Warning: Failed to parse config file ${configPath}:`, error);
+        }
+      }
+    }
+
+    return {};
+  }
+
+  /**
+   * Convert custom docs config to DiscoveredPackage format
+   */
+  private createDiscoveredPackageFromConfig(
+    pkg: NonNullable<CustomDocsConfig['packages']>[number]
+  ): DiscoveredPackage {
+    return {
+      name: pkg.name,
+      version: pkg.version || 'custom',
+      description: pkg.description,
+      docsUrl: pkg.docsUrl,
+      githubUrl: null,
+      npmUrl: `https://www.npmjs.com/package/${pkg.name}`,
+      confidence: 'high', // Custom configs are always high confidence
+    };
+  }
 
   /**
    * Load project information from package.json
@@ -185,6 +236,18 @@ class ProjectDocsServer {
 
       console.error(`Loaded project: ${this.projectInfo.name}@${this.projectInfo.version}`);
       console.error(`Built-in plugins activated: ${this.activePlugins.length}`);
+
+      // Load custom documentation from config file
+      const customConfig = await this.loadCustomDocsConfig();
+      if (customConfig.packages && customConfig.packages.length > 0) {
+        console.error(`Loading ${customConfig.packages.length} custom documentation packages...`);
+        for (const customPkg of customConfig.packages) {
+          const discovered = this.createDiscoveredPackageFromConfig(customPkg);
+          const dynamicPlugin = createDynamicPlugin(discovered);
+          this.activePlugins.push(dynamicPlugin);
+          console.error(`  + ${customPkg.name}: ${customPkg.docsUrl} (custom)`);
+        }
+      }
 
       // Auto-discover plugins for remaining packages
       if (this.autoDiscoveryEnabled) {

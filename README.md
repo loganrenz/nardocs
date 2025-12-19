@@ -325,6 +325,53 @@ AI: Let me check the lodash documentation for array methods...
 }
 ```
 
+### Custom Documentation
+
+You can add custom documentation for packages that aren't installed in your project by creating a configuration file. This is useful for:
+
+- Third-party services with web-based documentation (e.g., Apple MapKit JS, Google Maps API)
+- Internal documentation sites
+- Packages you reference but don't install directly
+
+**Create a configuration file:**
+
+Create either `.mcp-project-docs.json` or `mcp-project-docs.json` in your project root:
+
+```json
+{
+  "packages": [
+    {
+      "name": "@apple/mapkit-js",
+      "docsUrl": "https://developer.apple.com/documentation/mapkitjs",
+      "description": "Apple MapKit JS - Interactive maps for web applications",
+      "version": "latest"
+    },
+    {
+      "name": "google-maps-api",
+      "docsUrl": "https://developers.google.com/maps/documentation/javascript",
+      "description": "Google Maps JavaScript API"
+    }
+  ]
+}
+```
+
+**Configuration format:**
+
+- `name` (required): Package identifier (can be any string, doesn't need to match an npm package)
+- `docsUrl` (required): Base URL for the documentation
+- `description` (optional): Human-readable description
+- `version` (optional): Version string (defaults to "custom")
+
+Once configured, you can use the documentation tools just like any other package:
+
+```
+AI: Let me check the Apple MapKit JS documentation for loading the library...
+[AI calls: check_apple_mapkit_js_docs({ topic: "loading-the-latest-version-of-mapkit-js" })]
+[Server returns: Apple MapKit JS documentation]
+```
+
+The server will automatically create a tool named `check_{sanitized_package_name}_docs` for each custom package.
+
 ## Usage Examples
 
 ### In Cursor IDE
