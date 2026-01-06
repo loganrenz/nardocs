@@ -24,6 +24,11 @@ import { SolidPlugin } from './plugins/solid.js';
 import { RemixPlugin } from './plugins/remix.js';
 import type { Plugin } from './plugins/nuxt.js';
 import { PackageScanner, createDynamicPlugin, type DiscoveredPackage } from './discovery/index.js';
+import {
+  findWorkspacePackages,
+  mergeWorkspaceDependencies,
+  detectPackageManager,
+} from './discovery/workspace.js';
 
 /**
  * Project information loaded from package.json
@@ -201,20 +206,41 @@ class ProjectDocsServer {
   }
 
   /**
-   * Load project information from package.json
+   * Load project information from package.json and workspace packages
    */
   private async loadProjectInfo(): Promise<void> {
     try {
-      const packageJsonPath = path.join(this.projectPath, 'package.json');
-      const content = await fs.readFile(packageJsonPath, 'utf-8');
-      const packageJson = JSON.parse(content);
+      // Detect package manager
+      const pm = await detectPackageManager(this.projectPath);
+      console.error(`Detected package manager: ${pm}`);
+
+      // Find all workspace packages (including root)
+      const workspacePackages = await findWorkspacePackages(this.projectPath);
+      console.error(`Found ${workspacePackages.length} workspace package(s)`);
+
+      // Use root package for project info
+      const rootPackage = workspacePackages[0];
+      if (!rootPackage) {
+        throw new Error('No root package.json found');
+      }
+
+      // Merge dependencies from all workspace packages
+      const mergedDeps = mergeWorkspaceDependencies(workspacePackages);
 
       this.projectInfo = {
-        name: packageJson.name || 'unknown',
-        version: packageJson.version || '0.0.0',
-        dependencies: packageJson.dependencies || {},
-        devDependencies: packageJson.devDependencies || {},
+        name: rootPackage.name,
+        version: rootPackage.version,
+        dependencies: mergedDeps.dependencies,
+        devDependencies: mergedDeps.devDependencies,
       };
+
+      // Log workspace packages found
+      if (workspacePackages.length > 1) {
+        console.error('Workspace packages:');
+        for (const pkg of workspacePackages) {
+          console.error(`  - ${pkg.name} (${pkg.path})`);
+        }
+      }
 
       // Detect and activate built-in plugins
       const allDependencies = {
