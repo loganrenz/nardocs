@@ -253,7 +253,7 @@ describe('End-to-end: Discover and fetch docs', () => {
 
     expect(tools[0].name).toBe('check_drizzle_orm_docs');
     expect(tools[0].description).toContain('drizzle-orm');
-  });
+  }, 10000); // 10 second timeout for network requests
 
   it('should discover VueUse with correct documentation URL', async () => {
     const scanner = new PackageScanner();
