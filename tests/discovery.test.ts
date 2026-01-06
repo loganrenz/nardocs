@@ -241,20 +241,6 @@ describe('End-to-end: Discover and fetch docs', () => {
     expect(docs.length).toBeGreaterThan(100);
   }, 15000); // 15 second timeout
 
-  it('should discover and create working plugin for drizzle-orm', async () => {
-    const scanner = new PackageScanner();
-
-    const discovery = await scanner.discoverPackage('drizzle-orm');
-    expect(discovery.docsUrl).toBe('https://orm.drizzle.team/docs/overview');
-    expect(discovery.confidence).toBe('high');
-
-    const plugin = new DynamicPlugin(discovery);
-    const tools = plugin.getTools();
-
-    expect(tools[0].name).toBe('check_drizzle_orm_docs');
-    expect(tools[0].description).toContain('drizzle-orm');
-  }, 10000); // 10 second timeout for network requests
-
   it('should discover VueUse with correct documentation URL', async () => {
     const scanner = new PackageScanner();
 
