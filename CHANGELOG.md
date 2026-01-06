@@ -1,3 +1,9 @@
+# [1.7.0](https://github.com/loganrenz/nardocs/compare/v1.6.0...v1.7.0) (2026-01-06)
+
+### Features
+
+- add pnpm workspace support and workspace package discovery ([89bb54e](https://github.com/loganrenz/nardocs/commit/89bb54e53a45922ab533492d0617f96d6db09ee7))
+
 # [1.6.0](https://github.com/loganrenz/nardocs/compare/v1.5.0...v1.6.0) (2025-12-19)
 
 ### Features
